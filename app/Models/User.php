@@ -8,10 +8,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use jeremykenedy\LaravelRoles\Traits\HasRoleAndPermission;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoleAndPermission;
+    use HasFactory, Notifiable, HasRoleAndPermission, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
