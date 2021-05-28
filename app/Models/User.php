@@ -27,7 +27,9 @@ class User extends Authenticatable implements JWTSubject
         'password',
         'original_profile_image',
         'thumbnail_profile_image',
-        'avatar_profile_image'
+        'avatar_profile_image',
+        'flag_login',
+        'observation_flag_login'
     ];
 
     /**

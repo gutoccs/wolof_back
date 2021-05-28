@@ -16,16 +16,16 @@ class AuthController extends Controller
 
             $user = User::where('email', $request->input('email'))->first();
 
-            //if($user->flag_login == true) {
+            if($user->flag_login == true) {
                 $credentials = $request->only('email', 'password');
                 if ($token = $this->guard()->attempt($credentials)) {
                     return response()->json(['status' => 'success'], 200)->header('Authorization', $token);
                 }
                 return response()->json(['error' => 'login_error'], 401);
-            /*}
+            }
             else {
                 return response()->json(['error' => 'login_error Usuario no tiene permiso de autenticarse'], 401);
-            } */
+            }
         }
         else return response()->json(['error' => 'login_error Usuario no existe'], 401);
     }
