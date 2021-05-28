@@ -40,10 +40,12 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        $user = DB::table('users')
-                ->leftJoin('role_user', 'users.id', '=', 'role_user.user_id');
-
-
+        $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+                    ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
+                    ->select('users.id', 'users.name', 'users.email', 'role_user.role_id', 'roles.slug', 'roles.level')
+                    ->where('users.id', Auth::user()->id)
+                    ->first();
+        /*
         if(Employee::where('user_id', Auth::user()->id)->first()){
             $user = $user->leftJoin('employees', 'users.id', '=', 'employees.user_id')
                         ->select('users.id as id', 'email', 'name', 'surname', 'role_user.role_id as role', 'employees.id as employee_id');
@@ -52,12 +54,12 @@ class AuthController extends Controller
             $user = $user->leftJoin('clients', 'users.id', '=', 'clients.user_id')
                         ->select('users.id as id', 'email', 'names as name', 'surnames as surname', 'role_user.role_id as role');
         }
+        */
 
-        $user = $user->where('users.id', '=', Auth::user()->id)->first();
 
         return response()->json([
-            'status' => 'success',
-            'data' => $user
+            'status'    => 'success',
+            'data'      => $user
         ]);
     }
 
