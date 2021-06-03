@@ -19,21 +19,45 @@ class RolesTableSeeder extends Seeder
          */
         $RoleItems = [
             [
-                'name'        => 'Admin',
-                'slug'        => 'admin',
-                'description' => 'Admin Role',
-                'level'       => 5,
+                'name'        => 'CEO',
+                'slug'        => 'ceo',
+                'description' => 'Se refiere al Presidente de Wolof',
+                'level'       => 10,
             ],
             [
-                'name'        => 'User',
-                'slug'        => 'user',
-                'description' => 'User Role',
-                'level'       => 1,
+                'name'        => 'CTO',
+                'slug'        => 'cto',
+                'description' => 'Se refiere al Gerente de Tecnología de Wolof. Es lo más parecido a un súper usuario, esto porque pudiera ejecutar rutinas propias de tecnología',
+                'level'       => 10,
+            ],
+            [
+                'name'        => "Wolof's Employee",
+                'slug'        => 'wolof.employee',
+                'description' => 'Se refiere a cualquier Empleado de Wolof',
+                'level'       => 7,
+            ],
+            [
+                'name'        => 'Commerce Owner',
+                'slug'        => 'commerce.owner',
+                'description' => 'Se refiere al Dueño de la Cuenta, posiblemente el dueño del Comercio',
+                'level'       => 6,
+            ],
+            [
+                'name'        => 'Commerce Employee',
+                'slug'        => 'commerce.employee',
+                'description' => 'Son los Empleados de los Comercios',
+                'level'       => 4,
+            ],
+            [
+                'name'        => 'Client',
+                'slug'        => 'client',
+                'description' => 'Son los Clientes de Wolof',
+                'level'       => 3,
             ],
             [
                 'name'        => 'Unverified',
                 'slug'        => 'unverified',
-                'description' => 'Unverified Role',
+                'description' => 'Son aquellos visitantes de Wolof, por ende estos no tienen un rol en específico asociado',
                 'level'       => 0,
             ],
         ];
