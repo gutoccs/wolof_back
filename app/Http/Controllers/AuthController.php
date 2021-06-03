@@ -42,7 +42,7 @@ class AuthController extends Controller
     {
         $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
                     ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                    ->select('users.id', 'users.name', 'users.email', 'role_user.role_id', 'roles.slug', 'roles.level')
+                    ->select('users.id', 'users.email', 'users.username', 'role_user.role_id', 'roles.slug', 'roles.level')
                     ->where('users.id', Auth::user()->id)
                     ->first();
         /*
