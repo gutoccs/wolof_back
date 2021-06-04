@@ -39,7 +39,8 @@ class UsersTableSeeder extends Seeder
                 'email'         => 'system@wolof.com',
                 'password'      =>  bcrypt(Str::random(18)),
                 'flag_login'    =>  false,
-                'observation_flag_login'    =>  'El sistema no necesita autenticarse'
+                'observation_flag_login'    =>  'El sistema no necesita autenticarse',
+                'username'      =>  'wolof'
             ]);
 
             $newUser->attachRole($wolofEmployeeRole);
@@ -86,7 +87,8 @@ class UsersTableSeeder extends Seeder
                 'email'         => 'employee@wolof.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
-                'observation_flag_login'    =>  null
+                'observation_flag_login'    =>  null,
+                'username'      =>  'employee'
             ]);
 
             $newUser->attachRole($wolofEmployeeRole);
@@ -98,7 +100,8 @@ class UsersTableSeeder extends Seeder
                 'email'         => 'commerceowner@wolof.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
-                'observation_flag_login'    =>  null
+                'observation_flag_login'    =>  null,
+                'username'      =>  'commerce_owner'
             ]);
 
             $newUser->attachRole($commerceOwnerRole);
@@ -110,7 +113,8 @@ class UsersTableSeeder extends Seeder
                 'email'         => 'commerceemployee@wolof.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
-                'observation_flag_login'    =>  null
+                'observation_flag_login'    =>  null,
+                'username'      =>  'commerce_employee'
             ]);
 
             $newUser->attachRole($commerceEmployeeRole);
@@ -122,7 +126,8 @@ class UsersTableSeeder extends Seeder
                 'email'         => 'client@wolof.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
-                'observation_flag_login'    =>  null
+                'observation_flag_login'    =>  null,
+                'username'      =>  'client'
             ]);
 
             $newUser->attachRole($clientRole);

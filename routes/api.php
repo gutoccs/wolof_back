@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\UserController;
 
 
@@ -34,5 +35,22 @@ Route::group([
     Route::group(['middleware' => 'checkMinimumLevel:10'], function () {
         Route::delete('/{idUser}', [UserController::class, 'destroy'])->where('idUser', '\d+');
     });
+
+});
+
+Route::group([
+    'prefix'    =>  'client'
+], function() {
+
+    Route::group(['middleware' => ['auth:api', 'checkIsSelfClientOrEmployee']], function () {
+        Route::get('/{idClient}', [ClientController::class, 'show'])->where('idClient', '\d+');
+        Route::put('/{idClient}', [ClientController::class, 'update'])->where('idClient', '\d+');
+    });
+
+    //Route::group(['middleware' => ['auth:api', 'checkTypeOfUser:employee']], function () {
+        Route::get('/', [ClientController::class, 'index']);
+    //});
+
+    Route::post('/', [ClientController::class, 'store']);
 
 });
