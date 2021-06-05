@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Employee extends Model
+class Merchant extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -16,7 +16,7 @@ class Employee extends Model
      * @var array
      */
 
-    protected $fillable = ['user_id', 'full_name'];
+    protected $fillable = ['user_id', 'name', 'surname'];
 
     /* Usuario al que pertenece */
     public function user()

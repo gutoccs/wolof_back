@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmployeesTable extends Migration
+class CreateMerchantsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('merchants', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('user_id');
 
-            $table->string('full_name', 128);
+            $table->string('name', 64);
+            $table->string('surname', 64);
 
             $table->timestamps();
             $table->softDeletes();
@@ -34,6 +35,6 @@ class CreateEmployeesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('merchants');
     }
 }

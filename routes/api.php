@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\UserController;
 
 
@@ -77,6 +78,27 @@ Route::group([
         Route::post('/', [EmployeeController::class, 'store']);
         Route::put('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
         Route::delete('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
+    });
+
+});
+
+
+Route::group([
+    'prefix'    =>  'merchant',
+    'middleware'    => [
+        'auth:api',
+        'checkTypeOfUser:employee'
+    ]
+], function() {
+
+    Route::get('/', [MerchantController::class, 'index']);
+    Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
+
+
+    Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
+        Route::post('/', [MerchantController::class, 'store']);
+        Route::put('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
+        Route::delete('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
     });
 
 });

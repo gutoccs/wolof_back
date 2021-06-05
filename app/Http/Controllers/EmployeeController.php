@@ -18,7 +18,7 @@ class EmployeeController extends Controller
                     ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                     ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
                     ->whereIn('roles.slug', ['ceo', 'cto', 'wolof.employee'])
-                    ->select('users.id as id_user', 'employees.id as id_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'employees.cellphone_number as cellphone_number_employee', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
+                    ->select('users.id as id_user', 'employees.id as id_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
                     ->get();
 
         return response()->json(

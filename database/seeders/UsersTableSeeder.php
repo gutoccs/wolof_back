@@ -40,7 +40,8 @@ class UsersTableSeeder extends Seeder
                 'password'      =>  bcrypt(Str::random(18)),
                 'flag_login'    =>  false,
                 'observation_flag_login'    =>  'El sistema no necesita autenticarse',
-                'username'      =>  'wolof'
+                'username'      =>  'wolof',
+                'cellphone_number'  =>  '+503123456781'
             ]);
 
             $newUser->attachRole($wolofEmployeeRole);
@@ -56,7 +57,8 @@ class UsersTableSeeder extends Seeder
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
-                'username'      =>  'jazmine'
+                'username'      =>  'jazmine',
+                'cellphone_number'  =>  '+503123456782'
             ]);
 
             $newUser->attachRole($ceoRole);
@@ -72,7 +74,8 @@ class UsersTableSeeder extends Seeder
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
-                'username'      =>  'gutoccs'
+                'username'      =>  'gutoccs',
+                'cellphone_number'  =>  '+503123456783'
             ]);
 
             $newUser->attachRole($ctoRole);
@@ -88,7 +91,8 @@ class UsersTableSeeder extends Seeder
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
-                'username'      =>  'employee'
+                'username'      =>  'employee',
+                'cellphone_number'  =>  '+503123456784'
             ]);
 
             $newUser->attachRole($wolofEmployeeRole);
@@ -101,7 +105,8 @@ class UsersTableSeeder extends Seeder
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
-                'username'      =>  'commerce_owner'
+                'username'      =>  'commerce_owner',
+                'cellphone_number'  =>  '+503123456785'
             ]);
 
             $newUser->attachRole($commerceOwnerRole);
@@ -114,20 +119,36 @@ class UsersTableSeeder extends Seeder
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
-                'username'      =>  'commerce_employee'
+                'username'      =>  'commerce_employee',
+                'cellphone_number'  =>  '+503123456786'
             ]);
 
             $newUser->attachRole($commerceEmployeeRole);
         }
 
-        // Client
-        if (config('roles.models.defaultUser')::where('email', '=', 'client@wolof.com')->first() === null) {
+        // Client 1
+        if (config('roles.models.defaultUser')::where('email', '=', 'client1@wolof.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'client@wolof.com',
+                'email'         => 'client1@wolof.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
-                'username'      =>  'client'
+                'username'      =>  'client_1',
+                'cellphone_number'  =>  '+503123456787'
+            ]);
+
+            $newUser->attachRole($clientRole);
+        }
+
+        // Client 2
+        if (config('roles.models.defaultUser')::where('email', '=', 'client2@wolof.com')->first() === null) {
+            $newUser = config('roles.models.defaultUser')::create([
+                'email'         => 'client2@wolof.com',
+                'password'      =>  bcrypt('password'),
+                'flag_login'    =>  true,
+                'observation_flag_login'    =>  null,
+                'username'      =>  'client_2',
+                'cellphone_number'  =>  '+503123456788'
             ]);
 
             $newUser->attachRole($clientRole);

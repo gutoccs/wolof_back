@@ -29,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
         'avatar_profile_image',
         'flag_login',
         'observation_flag_login',
-        'username'
+        'cellphone_number'
     ];
 
     /**
@@ -83,5 +83,12 @@ class User extends Authenticatable implements JWTSubject
      */
     public function employee() {
         return $this->hasOne('App\Models\Employee');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function merchant() {
+        return $this->hasOne('App\Models\Merchant');
     }
 }

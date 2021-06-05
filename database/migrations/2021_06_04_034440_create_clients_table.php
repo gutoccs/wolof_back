@@ -20,8 +20,6 @@ class CreateClientsTable extends Migration
 
             $table->string('name', 64);
             $table->string('surname', 64);
-            $table->string('cellphone_number', 32);
-
 
             $table->timestamps();
             $table->softDeletes();
