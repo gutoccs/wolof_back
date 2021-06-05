@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Client extends Model
+class Employee extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -16,12 +16,11 @@ class Client extends Model
      * @var array
      */
 
-    protected $fillable = ['user_id', 'name', 'surname', 'cellphone_number'];
+    protected $fillable = ['user_id', 'full_name', 'cellphone_number'];
 
     /* Usuario al que pertenece */
     public function user()
     {
         return $this->belongsTo('App\Models\User');
     }
-
 }

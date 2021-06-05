@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\UserController;
 
 
@@ -47,10 +48,35 @@ Route::group([
         Route::put('/{idClient}', [ClientController::class, 'update'])->where('idClient', '\d+');
     });
 
-    //Route::group(['middleware' => ['auth:api', 'checkTypeOfUser:employee']], function () {
+    Route::group(['middleware' => ['auth:api', 'checkTypeOfUser:employee']], function () {
         Route::get('/', [ClientController::class, 'index']);
-    //});
+    });
+
+    Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
+        Route::delete('/{idClient}', [ClientController::class, 'update'])->where('idClient', '\d+');
+    });
 
     Route::post('/', [ClientController::class, 'store']);
+
+});
+
+
+Route::group([
+    'prefix'    =>  'employee',
+    'middleware'    => [
+        'auth:api',
+        'checkTypeOfUser:employee'
+    ]
+], function() {
+
+    Route::get('/', [EmployeeController::class, 'index']);
+    Route::get('/{idEmployee}', [EmployeeController::class, 'show'])->where('idEmployee', '\d+');
+
+
+    Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
+        Route::post('/', [EmployeeController::class, 'store']);
+        Route::put('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
+        Route::delete('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
+    });
 
 });

@@ -14,7 +14,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
         Model::unguard();
 
             $this->call(PermissionsTableSeeder::class);
@@ -22,6 +21,7 @@ class DatabaseSeeder extends Seeder
             $this->call(ConnectRelationshipsSeeder::class);
             $this->call(UsersTableSeeder::class);
             $this->call(ClientstableSeeder::class);
+            $this->call(EmployeestableSeeder::class);
 
         Model::reguard();
     }
