@@ -25,14 +25,13 @@ Route::prefix('auth')->group(function () {
 Route::group([
     'prefix'        =>  'user',
     'middleware'    => [
-        'auth:api'
+        'auth:api',
+        'checkTypeOfUser:employee'
     ],
 ], function() {
 
-    //Route::group(['middleware' => 'checkTypeOfUser:employee'], function () {
-        Route::get('/', [UserController::class, 'index']);
-        Route::get('/{idUser}', [UserController::class, 'show'])->where('idUser', '\d+');
-    //});
+    Route::get('/', [UserController::class, 'index']);
+    Route::get('/{idUser}', [UserController::class, 'show'])->where('idUser', '\d+');
 
     Route::group(['middleware' => 'checkMinimumLevel:10'], function () {
         Route::delete('/{idUser}', [UserController::class, 'destroy'])->where('idUser', '\d+');

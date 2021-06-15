@@ -12,11 +12,26 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $users = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
-                ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id')
-                ->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role')
+                ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id');
+
+
+        if($request->exists('id_user'))
+            $users = $users->where('users.id', $request->id_user);
+
+        if($request->exists('id_role'))
+            $users = $users->where('roles.id', $request->id_role);
+
+        if($request->exists('min_date'))
+            $users = $users->where('users.created_at', '>=', $request->min_date);
+
+        if($request->exists('max_date'))
+            $users = $users->where('users.created_at', '<=', $request->max_date);
+
+
+        $users = $users->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
                 ->get();
 
         return response()->json(

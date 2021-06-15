@@ -12,14 +12,32 @@ class MerchantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $merchants = Merchant::leftJoin('users', 'merchants.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                            ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee'])
-                            ->select('users.id as id_user', 'merchants.id as id_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
-                            ->get();
+                            ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee']);
+
+
+        if($request->exists('id_user'))
+             $merchants =  $merchants->where('users.id', $request->id_user);
+
+        if($request->exists('id_merchant'))
+             $merchants =  $merchants->where('merchants.id', $request->id_merchant);
+
+        if($request->exists('id_role'))
+             $merchants =  $merchants->where('roles.id', $request->id_role);
+
+        if($request->exists('min_date'))
+             $merchants =  $merchants->where('users.created_at', '>=', $request->min_date);
+
+        if($request->exists('max_date'))
+             $merchants =  $merchants->where('users.created_at', '<=', $request->max_date);
+
+
+        $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
+                                ->get();
 
         return response()->json(
             [
