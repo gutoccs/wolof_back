@@ -93,9 +93,10 @@ Route::group([
     Route::get('/', [MerchantController::class, 'index']);
     Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
 
+    Route::post('/', [MerchantController::class, 'store']);
+
 
     Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
-        Route::post('/', [MerchantController::class, 'store']);
         Route::put('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
         Route::delete('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
     });

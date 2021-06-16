@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
+use jeremykenedy\LaravelRoles\Models\Role;
 
 class EmployeeController extends Controller
 {
@@ -54,7 +58,67 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),
+        [
+            'email'                     =>  'required|email|unique:users',
+            'password'                  =>  'required|min:8|confirmed',
+            'password_confirmation'     =>  'required|same:password',
+            'cellphone_number'          =>  'required|string|between:4,32|unique:users',
+            'full_name'                 =>  'required|string|between:4,128',
+            'role_id'                   =>  'required|numeric|exists:roles,id|in:1,2,3',
+        ],
+        [
+            'email.required'            =>  'El Correo Electrónico es requerido',
+            'email.email'               =>  'Debe indicar un Correo Electrónico válido',
+            'email.unique'              =>  'El Correo Electrónico ya está en uso',
+            'password.required'         =>  'La contraseña es requerida',
+            'password.min'              =>  'La longitud mínima de la Contraseña es de 8 caracteres',
+            'password.confirmed'        =>  'Las Contraseñas no coinciden',
+            'password_confirmation.required'    => 'La confirmación de la Contraseña es requerida',
+            'password_confirmation.same'        => 'La confirmación de la Contraseña y la Contraseña no coinciden',
+            'cellphone_number.required'         =>  'El Teléfono Celular es requerido',
+            'cellphone_number.string'           =>  'El Teléfono Celular tiene un formato inválido ',
+            'cellphone_number.between'          =>  'La longitud del Teléfono Celular debe ser entre 4 y 32 caracteres',
+            'cellphone_number.unique'          =>  'El Teléfono Celular ya está en uso',
+            'full_name.required'                 =>  'El Nombre Completo es requerido',
+            'full_name.string'                   =>  'El Nombre Completo es inválido',
+            'full_name.between'                  =>  'La longitud del Nombre Completo es entre 4 y 128 caracteres',
+            'role_id.required'                  =>  'El ID del Rol es requerido',
+            'role_id.numeric'                   =>  'El ID del Rol debe ser numérico',
+            'role_id.exists'                    =>  'El Rol No Existe en la BD',
+            'role_id.in'                        =>  'El Rol No es válido para un empleado de Wolof'
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors'   =>  $validator->errors()], 422);
+
+        $token = Str::random(24);
+
+        $user = new User();
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->cellphone_number = $request->cellphone_number;
+        $user->flag_login = true;
+        $user->observation_flag_login = 'Email sin verificar - ' . $token;
+
+        if(!$user->save())
+            return response()->json(['errors' => 'No se pudo crear el Usuario del Empleado'], 422);
+
+        $employee = new Employee();
+        $employee->user_id = $user->id;
+        $employee->full_name = $request->full_name;
+
+        if(!$employee->save())
+        {
+            $user->forceDelete();
+            return response()->json(['errors'   =>  'No se pudo crear al empleado'], 422);
+        }
+
+        $newRole = config('roles.models.role')::find($request->role_id);
+        $employee->user->attachRole($newRole);
+
+        return response()->json(['status' => 'success'], 200);
+
     }
 
     /**
