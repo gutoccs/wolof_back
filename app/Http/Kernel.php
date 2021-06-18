@@ -64,5 +64,8 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkMinimumLevel' => \App\Http\Middleware\CheckMinimumLevel::class,
         'checkTypeOfUser'   => \App\Http\Middleware\CheckTypeOfUser::class,
+        'checkIsSelfClientOrEmployee'  =>  \App\Http\Middleware\CheckIsSelfClientOrEmployee::class,
+        'checkIsSelfEmployeeOrLevel10'  =>  \App\Http\Middleware\CheckIsSelfEmployeeOrLevel10::class,
+        'checkIsSelfMerchantOrEmployee'  =>  \App\Http\Middleware\CheckIsSelfMerchantOrEmployee::class,
     ];
 }
