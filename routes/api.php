@@ -64,18 +64,22 @@ Route::group([
 Route::group([
     'prefix'    =>  'employee',
     'middleware'    => [
-        'auth:api',
-        'checkTypeOfUser:employee'
+        'auth:api'
     ]
 ], function() {
 
-    Route::get('/', [EmployeeController::class, 'index']);
-    Route::get('/{idEmployee}', [EmployeeController::class, 'show'])->where('idEmployee', '\d+');
+    Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
+        Route::get('/', [EmployeeController::class, 'index']);
+        Route::get('/{idEmployee}', [EmployeeController::class, 'show'])->where('idEmployee', '\d+');
+    });
 
+    Route::group(['middleware' => ['checkIsSelfEmployeeOrLevel10']], function () {
+        Route::put('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
+    });
 
     Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
         Route::post('/', [EmployeeController::class, 'store']);
-        Route::put('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
+
         Route::delete('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
     });
 
@@ -85,19 +89,21 @@ Route::group([
 Route::group([
     'prefix'    =>  'merchant',
     'middleware'    => [
-        'auth:api',
-        'checkTypeOfUser:employee'
+        'auth:api'
     ]
 ], function() {
 
-    Route::get('/', [MerchantController::class, 'index']);
-    Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
+    Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
+        Route::get('/', [MerchantController::class, 'index']);
+        Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
+        Route::post('/', [MerchantController::class, 'store']);
+    });
 
-    Route::post('/', [MerchantController::class, 'store']);
-
+    Route::group(['middleware' => ['checkIsSelfMerchantOrEmployee']], function () {
+        Route::put('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
+    });
 
     Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
-        Route::put('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
         Route::delete('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
     });
 

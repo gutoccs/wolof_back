@@ -145,9 +145,80 @@ class MerchantController extends Controller
      * @param  \App\Models\Merchant  $merchant
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Merchant $merchant)
+    public function update(Request $request, $idMerchant)
     {
-        //
+        $merchant = Merchant::find($idMerchant);
+
+        if(!$merchant)
+            return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+
+        $validator = Validator::make($request->all(),
+        [
+            'email'                     =>  'email',
+            'password'                  =>  'min:8',
+            'username'                  =>  'alpha_dash|between:4,64',
+            'cellphone_number'          =>  'string|between:4,32',
+            'name'                      =>  'string|between:4,64',
+            'surname'                   =>  'string|between:4,64',
+        ],
+        [
+            'email.email'               =>  'Debe indicar un Correo Electrónico válido',
+            'password.min'              =>  'La longitud mínima de la Contraseña es de 8 caracteres',
+            'username.alpha_dash'       =>  'Solo se aceptan caracteres alfanuméricos, guiones y guiones bajos',
+            'username.between'          =>  'La longitud del Nombre de Usuario debe ser entre 4 y 64 caracteres',
+            'cellphone_number.string'   =>  'El Teléfono Celular tiene un formato inválido ',
+            'cellphone_number.between'  =>  'La longitud del Teléfono Celular debe ser entre 4 y 32 caracteres',
+            'name.string'               =>  'El Nombre es inválido',
+            'name.between'              =>  'La longitud del Nombre es entre 4 y 64 caracteres',
+            'surname.string'            =>  'El Apellido es inválido',
+            'surname.between'           =>  'La longitud del Apellido es entre 4 y 64 caracteres',
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors'   =>  $validator->errors()], 422);
+
+        if($request->exists('email'))
+        {
+            if(User::where('email', $request->email)->where('id', '!=', $merchant->user->id)->count() == 1)
+                return response()->json(['errors'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
+
+            if(User::where('email', $request->email)->count() == 0 && $merchant->user->email != $request->email)
+                $merchant->user->email = $request->email;
+        }
+
+        if($request->exists('password'))
+            $merchant->user->password = bcrypt($request->password);
+
+        if($request->exists('username'))
+        {
+            if(User::where('username', $request->username)->where('id', '!=', $merchant->user->id)->count() == 1)
+                return response()->json(['errors'   =>  'El Nombre de Usuario ya está siendo utilizado'], 422);
+
+            if(User::where('username', $request->username)->count() == 0  && $merchant->user->username != $request->username)
+                $merchant->user->username = strtolower($request->username);
+        }
+
+        if($request->exists('cellphone_number'))
+        {
+            if(User::where('cellphone_number', $request->cellphone_number)->where('id', '!=', $merchant->user->id)->count() == 1)
+                return response()->json(['errors'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
+
+            if(User::where('cellphone_number', $request->cellphone_number)->count() == 0  && $merchant->user->cellphone_number != $request->cellphone_number)
+                $merchant->user->cellphone_number = $request->cellphone_number;
+        }
+
+        if($request->exists('name'))
+            $merchant->name = $request->name;
+
+        if($request->exists('surname'))
+            $merchant->surname = $request->surname;
+
+
+        if($merchant->save() && $merchant->user->save())
+            return response()->json(['status' => 'success'], 200);
+
+        return response()->json(['errors'   =>  'No se pudo acualizar al Comerciante'], 422);
+
     }
 
     /**
