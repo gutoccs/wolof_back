@@ -215,9 +215,19 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employee $employee)
+    public function destroy($idEmployee)
     {
-        //
+        // TODO: Faltan realizar validaciones antes de eliminarlo
+
+        $employee = Employee::find($idEmployee);
+
+        if(!$employee)
+            return response()->json(['errors'   =>  'El Empleado no existe'], 422);
+
+        if($employee->user->delete())
+            $employee->delete();
+
+        return response()->json(['status' => 'success'], 200);
     }
 
     public function changeRole(Request $request, $idEmployee)

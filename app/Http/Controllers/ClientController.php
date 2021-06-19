@@ -86,8 +86,18 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Client $client)
+    public function destroy($idClient)
     {
-        //
+        // TODO: Faltan realizar validaciones antes de eliminarlo
+
+        $client = Client::find($idClient);
+
+        if(!$client)
+            return response()->json(['errors'   =>  'El Cliente no existe'], 422);
+
+        if($client->user->delete())
+            $client->delete();
+
+        return response()->json(['status' => 'success'], 200);
     }
 }

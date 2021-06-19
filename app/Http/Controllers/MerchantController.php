@@ -227,9 +227,19 @@ class MerchantController extends Controller
      * @param  \App\Models\Merchant  $merchant
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Merchant $merchant)
+    public function destroy($idMerchant)
     {
-        //
+        // TODO: Faltan realizar validaciones antes de eliminarlo
+
+        $merchant = Merchant::find($idMerchant);
+
+        if(!$merchant)
+            return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+
+        if($merchant->user->delete())
+            $merchant->delete();
+
+        return response()->json(['status' => 'success'], 200);
     }
 
     public function changeRole(Request $request, $idMerchant)

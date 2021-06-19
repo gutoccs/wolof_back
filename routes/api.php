@@ -50,10 +50,7 @@ Route::group([
 
     Route::group(['middleware' => ['auth:api', 'checkTypeOfUser:employee']], function () {
         Route::get('/', [ClientController::class, 'index']);
-    });
-
-    Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
-        Route::delete('/{idClient}', [ClientController::class, 'update'])->where('idClient', '\d+');
+        Route::delete('/{idClient}', [ClientController::class, 'destroy'])->where('idClient', '\d+');
     });
 
     Route::post('/', [ClientController::class, 'store']);
@@ -80,7 +77,7 @@ Route::group([
     Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
         Route::post('/', [EmployeeController::class, 'store']);
         Route::put('/{idEmployee}/change-role', [EmployeeController::class, 'changeRole'])->where('idEmployee', '\d+');
-        Route::delete('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
+        Route::delete('/{idEmployee}', [EmployeeController::class, 'destroy'])->where('idEmployee', '\d+');
     });
 
 });
@@ -98,14 +95,11 @@ Route::group([
         Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
         Route::post('/', [MerchantController::class, 'store']);
         Route::put('/{idMerchant}/change-role', [MerchantController::class, 'changeRole'])->where('idMerchant', '\d+');
+        Route::delete('/{idMerchant}', [MerchantController::class, 'destroy'])->where('idMerchant', '\d+');
     });
 
     Route::group(['middleware' => ['checkIsSelfMerchantOrEmployee']], function () {
         Route::put('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
-    });
-
-    Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
-        Route::delete('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
     });
 
 });
