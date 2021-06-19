@@ -79,7 +79,7 @@ Route::group([
 
     Route::group(['middleware' => ['checkMinimumLevel:10']], function () {
         Route::post('/', [EmployeeController::class, 'store']);
-
+        Route::put('/{idEmployee}/change-role', [EmployeeController::class, 'changeRole'])->where('idEmployee', '\d+');
         Route::delete('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
     });
 
@@ -97,6 +97,7 @@ Route::group([
         Route::get('/', [MerchantController::class, 'index']);
         Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
         Route::post('/', [MerchantController::class, 'store']);
+        Route::put('/{idMerchant}/change-role', [MerchantController::class, 'changeRole'])->where('idMerchant', '\d+');
     });
 
     Route::group(['middleware' => ['checkIsSelfMerchantOrEmployee']], function () {

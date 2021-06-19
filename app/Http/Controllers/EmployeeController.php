@@ -219,4 +219,34 @@ class EmployeeController extends Controller
     {
         //
     }
+
+    public function changeRole(Request $request, $idEmployee)
+    {
+        $employee = Employee::find($idEmployee);
+
+        if(!$employee)
+            return response()->json(['errors'   =>  'El Empleado no existe'], 422);
+
+        $validator = Validator::make($request->all(),
+        [
+            'role_id'                   =>  'required|numeric|exists:roles,id|in:1,2,3',
+        ],
+        [
+            'role_id.required'          =>  'El ID del Rol es requerido',
+            'role_id.numeric'           =>  'El ID del Rol debe ser numérico',
+            'role_id.exists'            =>  'El Rol No Existe en la BD',
+            'role_id.in'                =>  'El Rol No es válido para un empleado de Wolof'
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors'   =>  $validator->errors()], 422);
+
+        // Elimino todos los roles porque por ahora cada usuario solo tiene un rol
+        $employee->user->detachAllRoles();
+
+        $newRole = config('roles.models.role')::find($request->role_id);
+        $employee->user->attachRole($newRole);
+
+        return response()->json(['status' => 'success'], 200);
+    }
 }
