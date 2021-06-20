@@ -127,9 +127,24 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
+    public function show($idEmployee)
     {
-        //
+        if(Employee::where('id', $idEmployee)->count() == 0)
+            return response()->json(['errors'   =>  'El Empleado no existe'], 422);
+
+        $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
+                            ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
+                            ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
+                            ->whereIn('roles.slug', ['ceo', 'cto', 'wolof.employee'])
+                            ->where('employees.id', $idEmployee)
+                            ->select('users.id as id_user', 'employees.id as id_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
+                            ->first();
+
+        return response()->json(
+            [
+                'status'        =>  'success',
+                'employee'      =>  $employee
+            ], 200);
     }
 
     /**

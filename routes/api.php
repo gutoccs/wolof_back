@@ -67,10 +67,10 @@ Route::group([
 
     Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
         Route::get('/', [EmployeeController::class, 'index']);
-        Route::get('/{idEmployee}', [EmployeeController::class, 'show'])->where('idEmployee', '\d+');
     });
 
     Route::group(['middleware' => ['checkIsSelfEmployeeOrLevel10']], function () {
+        Route::get('/{idEmployee}', [EmployeeController::class, 'show'])->where('idEmployee', '\d+');
         Route::put('/{idEmployee}', [EmployeeController::class, 'update'])->where('idEmployee', '\d+');
     });
 
@@ -92,13 +92,13 @@ Route::group([
 
     Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
         Route::get('/', [MerchantController::class, 'index']);
-        Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
         Route::post('/', [MerchantController::class, 'store']);
         Route::put('/{idMerchant}/change-role', [MerchantController::class, 'changeRole'])->where('idMerchant', '\d+');
         Route::delete('/{idMerchant}', [MerchantController::class, 'destroy'])->where('idMerchant', '\d+');
     });
 
     Route::group(['middleware' => ['checkIsSelfMerchantOrEmployee']], function () {
+        Route::get('/{idMerchant}', [MerchantController::class, 'show'])->where('idMerchant', '\d+');
         Route::put('/{idMerchant}', [MerchantController::class, 'update'])->where('idMerchant', '\d+');
     });
 

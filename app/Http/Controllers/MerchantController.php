@@ -132,9 +132,23 @@ class MerchantController extends Controller
      * @param  \App\Models\Merchant  $merchant
      * @return \Illuminate\Http\Response
      */
-    public function show(Merchant $merchant)
+    public function show($idMerchant)
     {
-        //
+        if(Merchant::where('id', $idMerchant)->count() == 0)
+            return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+
+        $merchant = Merchant::leftJoin('users', 'merchants.user_id', '=', 'users.id')
+                            ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
+                            ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
+                            ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee'])
+                            ->select('users.id as id_user', 'merchants.id as id_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
+                            ->first();
+
+        return response()->json(
+            [
+                'status'        =>  'success',
+                'merchant'      =>  $merchant
+            ], 200);
     }
 
 
