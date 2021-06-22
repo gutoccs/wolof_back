@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
+use App\Models\Employee;
 use App\Models\Merchant;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -30,6 +32,9 @@ class MerchantController extends Controller
         if($request->exists('id_merchant'))
              $merchants =  $merchants->where('merchants.id', $request->id_merchant);
 
+        if($request->exists('id_public_merchant'))
+            $merchants =  $merchants->where('merchants.id_public', $request->id_public_merchant);
+
         if($request->exists('id_role'))
              $merchants =  $merchants->where('roles.id', $request->id_role);
 
@@ -40,7 +45,7 @@ class MerchantController extends Controller
              $merchants =  $merchants->where('users.created_at', '<=', $request->max_date);
 
 
-        $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
+        $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
                                 ->get();
 
         return response()->json(
@@ -114,6 +119,19 @@ class MerchantController extends Controller
         $merchant->name = $request->name;
         $merchant->surname = $request->surname;
 
+        $auxIdPublic;
+        while (true)
+        {
+            $auxIdPublic = Str::random(24);
+            $auxC = Client::where('id_public', $auxIdPublic)->count();
+            $auxE = Employee::where('id_public', $auxIdPublic)->count();
+            $auxM = Merchant::where('id_public', $auxIdPublic)->count();
+
+            if($auxC == 0 && $auxE == 0 && $auxM == 0)
+                break;
+        }
+        $merchant->id_public = $auxIdPublic;
+
         if(!$merchant->save())
         {
             $user->forceDelete();
@@ -132,16 +150,16 @@ class MerchantController extends Controller
      * @param  \App\Models\Merchant  $merchant
      * @return \Illuminate\Http\Response
      */
-    public function show($idMerchant)
+    public function show($idPublicMerchant)
     {
-        if(Merchant::where('id', $idMerchant)->count() == 0)
+        if(Merchant::where('id_public', $idPublicMerchant)->count() == 0)
             return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
 
         $merchant = Merchant::leftJoin('users', 'merchants.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
                             ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee'])
-                            ->select('users.id as id_user', 'merchants.id as id_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
+                            ->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
                             ->first();
 
         return response()->json(
@@ -159,9 +177,9 @@ class MerchantController extends Controller
      * @param  \App\Models\Merchant  $merchant
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $idMerchant)
+    public function update(Request $request, $idPublicMerchant)
     {
-        $merchant = Merchant::find($idMerchant);
+        $merchant = Merchant::where('id_public', $idPublicMerchant)->first();
 
         if(!$merchant)
             return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
@@ -241,11 +259,11 @@ class MerchantController extends Controller
      * @param  \App\Models\Merchant  $merchant
      * @return \Illuminate\Http\Response
      */
-    public function destroy($idMerchant)
+    public function destroy($idPublicMerchant)
     {
         // TODO: Faltan realizar validaciones antes de eliminarlo
 
-        $merchant = Merchant::find($idMerchant);
+        $merchant = Merchant::where('id_public', $idPublicMerchant)->first();
 
         if(!$merchant)
             return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
@@ -256,9 +274,9 @@ class MerchantController extends Controller
         return response()->json(['status' => 'success'], 200);
     }
 
-    public function changeRole(Request $request, $idMerchant)
+    public function changeRole(Request $request, $idPublicMerchant)
     {
-        $merchant = Merchant::find($idMerchant);
+        $merchant = Merchant::where('id_public', $idPublicMerchant)->first();
 
         if(!$merchant)
             return response()->json(['errors'   =>  'El Comerciante no existe'], 422);

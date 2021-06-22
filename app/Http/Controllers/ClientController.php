@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Employee;
+use App\Models\Merchant;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class ClientController extends Controller
 {
@@ -63,23 +67,23 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function show($idClient)
+    public function show($idPublicClient)
     {
-        if(Client::where('id', $idClient)->count() == 0)
+        if(Client::where('id_public', $idPublicClient)->count() == 0)
             return response()->json(['errors'   =>  'El Cliente no existe'], 422);
 
         $client = Client::leftJoin('users', 'clients.user_id', '=', 'users.id')
                         ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                         ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
                         ->whereIn('roles.slug', ['client'])
-                        ->where('clients.id', $idClient)
-                        ->select('users.id as id_user', 'clients.id as id_client', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client')
+                        ->where('clients.id_public', $idPublicClient)
+                        ->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_client','users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client')
                         ->first();
 
 
         return response()->json(
             [
-                'status'    =>  'success',
+                'status'   =>  'success',
                 'client'   =>  $client
             ], 200);
     }
@@ -91,7 +95,7 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(Request $request, $idPublicClient)
     {
         //
     }
@@ -102,11 +106,11 @@ class ClientController extends Controller
      * @param  \App\Models\Client  $client
      * @return \Illuminate\Http\Response
      */
-    public function destroy($idClient)
+    public function destroy($idPublicClient)
     {
         // TODO: Faltan realizar validaciones antes de eliminarlo
 
-        $client = Client::find($idClient);
+        Client::where('id_public', $idPublicClient)->first();
 
         if(!$client)
             return response()->json(['errors'   =>  'El Cliente no existe'], 422);

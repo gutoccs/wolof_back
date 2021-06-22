@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Employee;
+use App\Models\Merchant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -30,6 +32,9 @@ class EmployeeController extends Controller
         if($request->exists('id_employee'))
             $employees = $employees->where('employees.id', $request->id_employee);
 
+        if($request->exists('id_public_employee'))
+            $employees = $employees->where('employees.id_public', $request->id_public_employee);
+
         if($request->exists('id_role'))
             $employees = $employees->where('roles.id', $request->id_role);
 
@@ -40,7 +45,7 @@ class EmployeeController extends Controller
             $employees = $employees->where('users.created_at', '<=', $request->max_date);
 
 
-        $employees = $employees->select('users.id as id_user', 'employees.id as id_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
+        $employees = $employees->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee','users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
                                 ->get();
 
         return response()->json(
@@ -108,6 +113,19 @@ class EmployeeController extends Controller
         $employee->user_id = $user->id;
         $employee->full_name = $request->full_name;
 
+        $auxIdPublic;
+        while (true)
+        {
+            $auxIdPublic = Str::random(24);
+            $auxC = Client::where('id_public', $auxIdPublic)->count();
+            $auxE = Employee::where('id_public', $auxIdPublic)->count();
+            $auxM = Merchant::where('id_public', $auxIdPublic)->count();
+
+            if($auxC == 0 && $auxE == 0 && $auxM == 0)
+                break;
+        }
+        $employee->id_public = $auxIdPublic;
+
         if(!$employee->save())
         {
             $user->forceDelete();
@@ -127,17 +145,17 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show($idEmployee)
+    public function show($idPublicEmployee)
     {
-        if(Employee::where('id', $idEmployee)->count() == 0)
+        if(Employee::where('id_public', $idPublicEmployee)->count() == 0)
             return response()->json(['errors'   =>  'El Empleado no existe'], 422);
 
         $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
                             ->whereIn('roles.slug', ['ceo', 'cto', 'wolof.employee'])
-                            ->where('employees.id', $idEmployee)
-                            ->select('users.id as id_user', 'employees.id as id_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
+                            ->where('employees.id_public', $idPublicEmployee)
+                            ->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
                             ->first();
 
         return response()->json(
@@ -154,10 +172,10 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $idEmployee)
+    public function update(Request $request, $idPublicEmployee)
     {
 
-        $employee = Employee::find($idEmployee);
+        $employee = Employee::where('id_public', $idPublicEmployee)->first();
 
         if(!$employee)
             return response()->json(['errors'   =>  'El Empleado no existe'], 422);
@@ -230,11 +248,11 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy($idEmployee)
+    public function destroy($idPublicEmployee)
     {
         // TODO: Faltan realizar validaciones antes de eliminarlo
 
-        $employee = Employee::find($idEmployee);
+        $employee = Employee::where('id_public', $idPublicEmployee)->first();
 
         if(!$employee)
             return response()->json(['errors'   =>  'El Empleado no existe'], 422);
@@ -245,9 +263,9 @@ class EmployeeController extends Controller
         return response()->json(['status' => 'success'], 200);
     }
 
-    public function changeRole(Request $request, $idEmployee)
+    public function changeRole(Request $request, $idPublicEmployee)
     {
-        $employee = Employee::find($idEmployee);
+        $employee = Employee::find('id_public', $idPublicEmployee)->first();
 
         if(!$employee)
             return response()->json(['errors'   =>  'El Empleado no existe'], 422);

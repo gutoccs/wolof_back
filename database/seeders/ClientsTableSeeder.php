@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 use App\Models\Client;
 
 class ClientsTableSeeder extends Seeder
@@ -19,12 +20,14 @@ class ClientsTableSeeder extends Seeder
             'user_id'           =>  7,
             'name'              =>  'Primer Cliente',
             'surname'           =>  'Wolof',
+            'id_public'         =>  Str::random(24)
         ]);
 
         Client::create([
             'user_id'           =>  8,
             'name'              =>  'Segundo Cliente',
             'surname'           =>  'Wolof',
+            'id_public'         =>  Str::random(24)
         ]);
 
     }
