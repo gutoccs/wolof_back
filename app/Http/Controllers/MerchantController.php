@@ -8,6 +8,7 @@ use App\Models\Merchant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use jeremykenedy\LaravelRoles\Models\Role;
 
@@ -44,6 +45,14 @@ class MerchantController extends Controller
         if($request->exists('max_date'))
              $merchants =  $merchants->where('users.created_at', '<=', $request->max_date);
 
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            if($request->exists('flag_login'))
+            {
+                if(in_array($request->flag_login, [0, 1]))
+                    $merchants = $merchants->where('users.flag_login', $request->flag_login);
+            }
+        }
 
         $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
                                 ->get();

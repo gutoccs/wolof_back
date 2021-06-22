@@ -8,6 +8,7 @@ use App\Models\Merchant;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use jeremykenedy\LaravelRoles\Models\Role;
 
@@ -43,6 +44,15 @@ class EmployeeController extends Controller
 
         if($request->exists('max_date'))
             $employees = $employees->where('users.created_at', '<=', $request->max_date);
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            if($request->exists('flag_login'))
+            {
+                if(in_array($request->flag_login, [0, 1]))
+                    $employees = $employees->where('users.flag_login', $request->flag_login);
+            }
+        }
 
 
         $employees = $employees->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee','users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')

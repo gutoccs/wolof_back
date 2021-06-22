@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Merchant;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ClientController extends Controller
@@ -39,6 +40,14 @@ class ClientController extends Controller
         if($request->exists('max_date'))
             $clients = $clients->where('users.created_at', '<=', $request->max_date);
 
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            if($request->exists('flag_login'))
+            {
+                if(in_array($request->flag_login, [0, 1]))
+                    $clients = $clients->where('users.flag_login', $request->flag_login);
+            }
+        }
 
         $clients = $clients->select('users.id as id_user', 'clients.id as id_client', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client')
                             ->get();

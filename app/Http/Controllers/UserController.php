@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -29,6 +30,15 @@ class UserController extends Controller
 
         if($request->exists('max_date'))
             $users = $users->where('users.created_at', '<=', $request->max_date);
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            if($request->exists('flag_login'))
+            {
+                if(in_array($request->flag_login, [0, 1]))
+                    $users = $users->where('users.flag_login', $request->flag_login);
+            }
+        }
 
 
         $users = $users->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
