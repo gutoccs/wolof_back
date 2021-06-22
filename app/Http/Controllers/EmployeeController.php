@@ -54,9 +54,12 @@ class EmployeeController extends Controller
             }
         }
 
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+            $employees = $employees->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee','users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee');
+        else
+            $employees = $employees->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee','users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee');
 
-        $employees = $employees->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee','users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
-                                ->get();
+        $employees = $employees->get();
 
         return response()->json(
         [
@@ -164,9 +167,15 @@ class EmployeeController extends Controller
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
                             ->whereIn('roles.slug', ['ceo', 'cto', 'wolof.employee'])
-                            ->where('employees.id_public', $idPublicEmployee)
-                            ->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee')
-                            ->first();
+                            ->where('employees.id_public', $idPublicEmployee);
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+            $employee = $employee->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee');
+        else
+            $employee = $employee->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee');
+
+        $employee = $employee->first();
+
 
         return response()->json(
             [

@@ -49,8 +49,12 @@ class ClientController extends Controller
             }
         }
 
-        $clients = $clients->select('users.id as id_user', 'clients.id as id_client', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client')
-                            ->get();
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+            $clients = $clients->select('users.id as id_user', 'clients.id as id_client', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
+        else
+            $clients = $clients->select('users.id as id_user', 'clients.id as id_client', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
+
+        $clients = $clients->get();
 
         return response()->json(
             [
@@ -85,9 +89,14 @@ class ClientController extends Controller
                         ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                         ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
                         ->whereIn('roles.slug', ['client'])
-                        ->where('clients.id_public', $idPublicClient)
-                        ->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_client','users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client')
-                        ->first();
+                        ->where('clients.id_public', $idPublicClient);
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+            $client = $client->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_client','users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
+        else
+            $client = $client->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_client','users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
+
+        $client = $client->first();
 
 
         return response()->json(

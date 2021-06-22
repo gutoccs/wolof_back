@@ -54,8 +54,12 @@ class MerchantController extends Controller
             }
         }
 
-        $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
-                                ->get();
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+            $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
+        else
+            $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
+
+        $merchants = $merchants->get();
 
         return response()->json(
             [
@@ -167,9 +171,15 @@ class MerchantController extends Controller
         $merchant = Merchant::leftJoin('users', 'merchants.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                            ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee'])
-                            ->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
-                            ->first();
+                            ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee']);
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+            $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
+        else
+            $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
+
+        $merchant = $merchant->first();
+
 
         return response()->json(
             [
