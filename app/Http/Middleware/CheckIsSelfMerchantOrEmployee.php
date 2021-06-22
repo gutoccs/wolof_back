@@ -17,9 +17,9 @@ class CheckIsSelfMerchantOrEmployee
      */
     public function handle(Request $request, Closure $next)
     {
-        if(isset(Auth::user()->merchant->id))
+        if(isset(Auth::user()->merchant->id_public))
         {
-            if(Auth::user()->merchant->id == $request->route()->parameter('idMerchant'))
+            if(Auth::user()->merchant->id_public == $request->route()->parameter('idPublicMerchant'))
                 return $next($request);
         }
 

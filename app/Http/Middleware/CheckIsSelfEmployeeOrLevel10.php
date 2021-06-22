@@ -18,9 +18,9 @@ class CheckIsSelfEmployeeOrLevel10
     public function handle(Request $request, Closure $next)
     {
 
-        if(isset(Auth::user()->employee->id))
+        if(isset(Auth::user()->employee->id_public))
         {
-            if(Auth::user()->employee->id == $request->route()->parameter('idEmployee'))
+            if(Auth::user()->employee->id_public == $request->route()->parameter('idPublicEmployee'))
                 return $next($request);
         }
 

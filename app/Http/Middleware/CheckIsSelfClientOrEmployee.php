@@ -17,9 +17,9 @@ class CheckIsSelfClientOrEmployee
      */
     public function handle(Request $request, Closure $next)
     {
-        if(isset(Auth::user()->client->id))
+        if(isset(Auth::user()->client->id_public))
         {
-            if(Auth::user()->client->id == $request->route()->parameter('idClient'))
+            if(Auth::user()->client->id_public == $request->route()->parameter('idPublicClient'))
                 return $next($request);
         }
 
