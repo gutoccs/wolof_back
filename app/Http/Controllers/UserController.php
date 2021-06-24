@@ -31,14 +31,13 @@ class UserController extends Controller
         if($request->exists('max_date'))
             $users = $users->where('users.created_at', '<=', $request->max_date);
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+
+        if($request->exists('flag_login'))
         {
-            if($request->exists('flag_login'))
-            {
-                if(in_array($request->flag_login, [0, 1]))
-                    $users = $users->where('users.flag_login', $request->flag_login);
-            }
+            if(in_array($request->flag_login, [0, 1]))
+                $users = $users->where('users.flag_login', $request->flag_login);
         }
+
 
         if($request->exists('order_by'))
         {

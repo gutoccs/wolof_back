@@ -45,14 +45,14 @@ class MerchantController extends Controller
         if($request->exists('max_date'))
              $merchants =  $merchants->where('users.created_at', '<=', $request->max_date);
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+
+
+        if($request->exists('flag_login'))
         {
-            if($request->exists('flag_login'))
-            {
-                if(in_array($request->flag_login, [0, 1]))
-                    $merchants = $merchants->where('users.flag_login', $request->flag_login);
-            }
+            if(in_array($request->flag_login, [0, 1]))
+                $merchants = $merchants->where('users.flag_login', $request->flag_login);
         }
+
 
         if($request->exists('order_by'))
         {
