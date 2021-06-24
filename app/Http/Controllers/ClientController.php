@@ -49,6 +49,21 @@ class ClientController extends Controller
             }
         }
 
+        if($request->exists('order_by'))
+        {
+            if(in_array($request->order_by, ['created_at_asc', 'created_at_desc']))
+            {
+                switch($request->order_by)
+                {
+                    case 'created_at_asc':      $clients = $clients->orderBy('clients.created_at', 'asc');
+                                                break;
+
+                    case 'created_at_desc':     $clients = $clients->orderBy('clients.created_at', 'desc');
+                                                break;
+                }
+            }
+        }
+
         if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
             $clients = $clients->select('users.id as id_user', 'clients.id as id_client', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
         else

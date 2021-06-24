@@ -40,12 +40,24 @@ class UserController extends Controller
             }
         }
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
-            $users = $users->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user');
-        else
-            $users = $users->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user');
+        if($request->exists('order_by'))
+        {
+            if(in_array($request->order_by, ['created_at_asc', 'created_at_desc']))
+            {
+                switch($request->order_by)
+                {
+                    case 'created_at_asc':      $users = $users->orderBy('users.created_at', 'asc');
+                                                break;
 
-        $users = $users>get();
+                    case 'created_at_desc':     $users = $users->orderBy('users.created_at', 'desc');
+                                                break;
+                }
+            }
+        }
+
+
+        $users = $users->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
+                        ->get();
 
         return response()->json(
             [

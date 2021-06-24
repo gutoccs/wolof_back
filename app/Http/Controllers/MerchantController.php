@@ -54,12 +54,25 @@ class MerchantController extends Controller
             }
         }
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
-            $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
-        else
-            $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
+        if($request->exists('order_by'))
+        {
+            if(in_array($request->order_by, ['created_at_asc', 'created_at_desc']))
+            {
+                switch($request->order_by)
+                {
+                    case 'created_at_asc':      $merchants = $merchants->orderBy('merchants.created_at', 'asc');
+                                                break;
 
-        $merchants = $merchants->get();
+                    case 'created_at_desc':     $merchants = $merchants->orderBy('merchants.created_at', 'desc');
+                                                break;
+                }
+            }
+        }
+
+
+        $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
+                                ->get();
+
 
         return response()->json(
             [
