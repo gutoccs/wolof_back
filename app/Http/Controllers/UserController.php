@@ -73,16 +73,22 @@ class UserController extends Controller
      */
     public function show($idUser)
     {
-        $user = User::find($idUser);
 
-        if($user) {
-            return response()->json([
-                'status'    =>  'success',
-                'user'      =>  $user
-            ], 200);
-        }
+        if(User::where('id', $idUser)->count() == 0)
+            return response()->json(['error' => 'El Usuario no existe'], 422);
 
-        return response()->json(['error' => 'El Usuario no existe'], 422);
+
+        $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
+                        ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id')
+                        ->where('users.id', $idUser)
+                        ->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
+                        ->first();
+
+        return response()->json([
+            'status'    =>  'success',
+            'user'      =>  $user
+        ], 200);
+
     }
 
     /**

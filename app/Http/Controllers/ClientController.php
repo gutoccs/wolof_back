@@ -63,8 +63,8 @@ class ClientController extends Controller
             }
         }
 
-            $clients = $clients->select('users.id as id_user', 'clients.id as id_client', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client')
-                                ->get();
+        $clients = $clients->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_public_client', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client')
+                            ->get();
 
         return response()->json(
             [
@@ -102,9 +102,9 @@ class ClientController extends Controller
                         ->where('clients.id_public', $idPublicClient);
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
-            $client = $client->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_client','users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
+            $client = $client->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_public_client', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
         else
-            $client = $client->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_client','users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
+            $client = $client->select('users.id as id_user', 'clients.id as id_client', 'clients.id_public as id_public_client', 'roles.name as name_role', 'users.email as email_user', 'users.username as username_user', 'clients.name as name_client', 'clients.surname as surname_client', 'users.cellphone_number as cellphone_number_user', 'clients.created_at as created_at_client', 'clients.updated_at as updated_at_client');
 
         $client = $client->first();
 
