@@ -37,6 +37,8 @@ Route::group([
         Route::delete('/{idUser}', [UserController::class, 'destroy'])->where('idUser', '\d+');
     });
 
+    Route::put('/{idUser}/flag-login', [UserController::class, 'flagLogin'])->where('idUser', '\d+');
+
 });
 
 Route::group([

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -117,5 +118,66 @@ class UserController extends Controller
         }
 
         return response()->json(['error' => 'El Usuario no existe'], 422);
+    }
+
+    public function flagLogin(Request $request, $idUser)
+    {
+        $user = User::find($idUser);
+
+        if(!$user)
+            return response()->json(['error' => 'El Usuario no existe'], 422);
+
+        $validator = Validator::make($request->all(),
+        [
+            'flag_login'                =>  'required|in:0,1'
+        ],
+        [
+            'flag_login.required'       =>  'El campo flag_login es Requerido',
+            'flag_login.in'             =>  'El valor de flag_login debe ser 0 o 1'
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors'   =>  $validator->errors()], 422);
+
+        if($request->flag_login == 0)
+        {
+            $validator = Validator::make($request->all(),
+            [
+                'observation_flag_login'            =>  'required|string|max:255'
+            ],
+            [
+                'observation_flag_login.required'       =>  'El campo observation_flag_login es Requerido',
+                'observation_flag_login.string'         =>  'El observation_flag_login debe ser un String',
+                'observation_flag_login.max'            =>  'observation_flag_login debe ser máximo 255 caracteres'
+            ]);
+
+            if($validator->fails())
+                return response()->json(['errors'   =>  $validator->errors()], 422);
+
+            $user->flag_login = false;
+            $user->observation_flag_login = $request->observation_flag_login;
+        }
+        else {
+            $user->flag_login = true;
+            $user->observation_flag_login = null;
+        }
+
+        if($user->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            if(Auth::user()->hasRole(['ceo', 'cto']))
+            {
+                if($user->save())
+                    return response()->json(['status'    =>  'success'], 200);
+            }
+            else{
+                return response()->json(['error' => 'Solo CEO y CTO puede realizar esta solicitud'], 422);
+            }
+        }
+        else {
+            if($user->save())
+                return response()->json(['status'    =>  'success'], 200);
+        }
+
+        return response()->json(['error' => 'No se pudo actualizar flag_login del usuario'], 422);
     }
 }
