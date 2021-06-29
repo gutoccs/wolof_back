@@ -31,6 +31,9 @@ class ClientController extends Controller
         if($request->exists('id_client'))
             $clients = $clients->where('clients.id', $request->id_client);
 
+        if($request->exists('id_public'))
+            $clients = $clients->where('clients.id_public', $request->id_public);
+
         if($request->exists('id_role'))
             $clients = $clients->where('roles.id', $request->id_role);
 
@@ -45,6 +48,18 @@ class ClientController extends Controller
         {
             if(in_array($request->flag_login, [0, 1]))
                 $clients = $clients->where('users.flag_login', $request->flag_login);
+        }
+
+        if($request->exists('full_search'))
+        {
+            $fullSearch = $request->full_search;
+            $clients = $clients->where(function($query) use ($fullSearch) {
+                $query->orWhere('users.email', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.username', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.cellphone_number', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('clients.name', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('clients.surname', 'like', '%'.$fullSearch.'%');
+            });
         }
 
 

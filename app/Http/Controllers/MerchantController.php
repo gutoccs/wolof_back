@@ -33,8 +33,8 @@ class MerchantController extends Controller
         if($request->exists('id_merchant'))
              $merchants =  $merchants->where('merchants.id', $request->id_merchant);
 
-        if($request->exists('id_public_merchant'))
-            $merchants =  $merchants->where('merchants.id_public', $request->id_public_merchant);
+        if($request->exists('id_public'))
+            $merchants =  $merchants->where('merchants.id_public', $request->id_public);
 
         if($request->exists('id_role'))
              $merchants =  $merchants->where('roles.id', $request->id_role);
@@ -45,12 +45,22 @@ class MerchantController extends Controller
         if($request->exists('max_date'))
              $merchants =  $merchants->where('users.created_at', '<=', $request->max_date);
 
-
-
         if($request->exists('flag_login'))
         {
             if(in_array($request->flag_login, [0, 1]))
                 $merchants = $merchants->where('users.flag_login', $request->flag_login);
+        }
+
+        if($request->exists('full_search'))
+        {
+            $fullSearch = $request->full_search;
+            $merchants = $merchants->where(function($query) use ($fullSearch) {
+                $query->orWhere('users.email', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.username', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.cellphone_number', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('merchants.name', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('merchants.surname', 'like', '%'.$fullSearch.'%');
+            });
         }
 
 

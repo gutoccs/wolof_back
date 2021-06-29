@@ -33,8 +33,8 @@ class EmployeeController extends Controller
         if($request->exists('id_employee'))
             $employees = $employees->where('employees.id', $request->id_employee);
 
-        if($request->exists('id_public_employee'))
-            $employees = $employees->where('employees.id_public', $request->id_public_employee);
+        if($request->exists('id_public'))
+            $employees = $employees->where('employees.id_public', $request->id_public);
 
         if($request->exists('id_role'))
             $employees = $employees->where('roles.id', $request->id_role);
@@ -49,6 +49,17 @@ class EmployeeController extends Controller
         {
             if(in_array($request->flag_login, [0, 1]))
                 $employees = $employees->where('users.flag_login', $request->flag_login);
+        }
+
+        if($request->exists('full_search'))
+        {
+            $fullSearch = $request->full_search;
+            $employees = $employees->where(function($query) use ($fullSearch) {
+                $query->orWhere('users.email', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.username', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.cellphone_number', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('employees.full_name', 'like', '%'.$fullSearch.'%');
+            });
         }
 
 

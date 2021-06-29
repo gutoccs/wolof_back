@@ -39,6 +39,16 @@ class UserController extends Controller
                 $users = $users->where('users.flag_login', $request->flag_login);
         }
 
+        if($request->exists('full_search'))
+        {
+            $fullSearch = $request->full_search;
+            $users = $users->where(function($query) use ($fullSearch) {
+                $query->orWhere('users.email', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.username', 'like', '%'.$fullSearch.'%')
+                        ->orWhere('users.cellphone_number', 'like', '%'.$fullSearch.'%');
+            });
+        }
+
 
         if($request->exists('order_by'))
         {
@@ -56,7 +66,7 @@ class UserController extends Controller
         }
 
 
-        $users = $users->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
+        $users = $users->select('users.id as id_user', 'users.email as email_user', 'users.username as username_user', 'users.cellphone_number as cellphone_number_user',  'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
                         ->get();
 
         return response()->json(
@@ -82,7 +92,7 @@ class UserController extends Controller
         $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
                         ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id')
                         ->where('users.id', $idUser)
-                        ->select('users.id as id_user', 'users.email as email_user', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
+                        ->select('users.id as id_user', 'users.email as email_user',  'users.username as username_user', 'users.cellphone_number as cellphone_number_user',  'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
                         ->first();
 
         return response()->json([
