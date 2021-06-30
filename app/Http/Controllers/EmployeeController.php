@@ -148,18 +148,7 @@ class EmployeeController extends Controller
         $employee->user_id = $user->id;
         $employee->full_name = $request->full_name;
 
-        $auxIdPublic;
-        while (true)
-        {
-            $auxIdPublic = Str::random(24);
-            $auxC = Client::where('id_public', $auxIdPublic)->count();
-            $auxE = Employee::where('id_public', $auxIdPublic)->count();
-            $auxM = Merchant::where('id_public', $auxIdPublic)->count();
-
-            if($auxC == 0 && $auxE == 0 && $auxM == 0)
-                break;
-        }
-        $employee->id_public = $auxIdPublic;
+        $employee->id_public = generateIdPublic();
 
         if(!$employee->save())
         {

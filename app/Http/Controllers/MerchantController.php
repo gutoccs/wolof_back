@@ -155,18 +155,7 @@ class MerchantController extends Controller
         $merchant->name = $request->name;
         $merchant->surname = $request->surname;
 
-        $auxIdPublic;
-        while (true)
-        {
-            $auxIdPublic = Str::random(24);
-            $auxC = Client::where('id_public', $auxIdPublic)->count();
-            $auxE = Employee::where('id_public', $auxIdPublic)->count();
-            $auxM = Merchant::where('id_public', $auxIdPublic)->count();
-
-            if($auxC == 0 && $auxE == 0 && $auxM == 0)
-                break;
-        }
-        $merchant->id_public = $auxIdPublic;
+        $merchant->id_public = generateIdPublic();
 
         if(!$merchant->save())
         {
