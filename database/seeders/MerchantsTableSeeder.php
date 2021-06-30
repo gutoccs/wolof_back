@@ -17,14 +17,28 @@ class MerchantsTableSeeder extends Seeder
     {
         Merchant::create([
             'user_id'           =>  5,
-            'name'              =>  'Dueño',
+            'name'              =>  'Dueño Primer',
             'surname'           =>  'Comercio',
             'id_public'         =>  Str::random(24)
         ]);
 
         Merchant::create([
             'user_id'           =>  6,
-            'name'              =>  'Empleado',
+            'name'              =>  'Empleado Primer',
+            'surname'           =>  'Comercio',
+            'id_public'         =>  Str::random(24)
+        ]);
+
+        Merchant::create([
+            'user_id'           =>  9,
+            'name'              =>  'Dueño Segundo',
+            'surname'           =>  'Comercio',
+            'id_public'         =>  Str::random(24)
+        ]);
+
+        Merchant::create([
+            'user_id'           =>  10,
+            'name'              =>  'Empleado Segundo',
             'surname'           =>  'Comercio',
             'id_public'         =>  Str::random(24)
         ]);

@@ -98,7 +98,7 @@ class UsersTableSeeder extends Seeder
             $newUser->attachRole($wolofEmployeeRole);
         }
 
-        // Commerce Owner
+        // First Commerce Owner
         if (config('roles.models.defaultUser')::where('email', '=', 'commerceowner@wolof.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
                 'email'         => 'commerceowner@wolof.com',
@@ -112,7 +112,7 @@ class UsersTableSeeder extends Seeder
             $newUser->attachRole($commerceOwnerRole);
         }
 
-        // Commerce Employee
+        // First Commerce Employee
         if (config('roles.models.defaultUser')::where('email', '=', 'commerceemployee@wolof.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
                 'email'         => 'commerceemployee@wolof.com',
@@ -152,6 +152,34 @@ class UsersTableSeeder extends Seeder
             ]);
 
             $newUser->attachRole($clientRole);
+        }
+
+        // Second Commerce Owner
+        if (config('roles.models.defaultUser')::where('email', '=', 'commerceowner2@wolof.com')->first() === null) {
+            $newUser = config('roles.models.defaultUser')::create([
+                'email'         => 'commerceowner2@wolof.com',
+                'password'      =>  bcrypt('password'),
+                'flag_login'    =>  true,
+                'observation_flag_login'    =>  null,
+                'username'      =>  'commerce_owner_2',
+                'cellphone_number'  =>  '+503123456321'
+            ]);
+
+            $newUser->attachRole($commerceOwnerRole);
+        }
+
+        // Second Commerce Employee
+        if (config('roles.models.defaultUser')::where('email', '=', 'commerceemployee2@wolof.com')->first() === null) {
+            $newUser = config('roles.models.defaultUser')::create([
+                'email'         => 'commerceemployee2@wolof.com',
+                'password'      =>  bcrypt('password'),
+                'flag_login'    =>  true,
+                'observation_flag_login'    =>  null,
+                'username'      =>  'commerce_employee_2',
+                'cellphone_number'  =>  '+50312345123'
+            ]);
+
+            $newUser->attachRole($commerceEmployeeRole);
         }
 
     }

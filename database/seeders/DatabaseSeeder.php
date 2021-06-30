@@ -20,9 +20,10 @@ class DatabaseSeeder extends Seeder
             $this->call(RolesTableSeeder::class);
             $this->call(ConnectRelationshipsSeeder::class);
             $this->call(UsersTableSeeder::class);
-            $this->call(ClientstableSeeder::class);
-            $this->call(EmployeestableSeeder::class);
-            $this->call(MerchantstableSeeder::class);
+            $this->call(ClientsTableSeeder::class);
+            $this->call(EmployeesTableSeeder::class);
+            $this->call(MerchantsTableSeeder::class);
+            $this->call(ShopsTableSeeder::class);
 
         Model::reguard();
     }
