@@ -26,6 +26,8 @@ class Shop extends Model
         'original_profile_image',
         'thumbnail_profile_image',
         'avatar_profile_image',
+        'flag_active',
+        'observation_flag_active',
     ];
 
 }
