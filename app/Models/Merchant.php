@@ -23,4 +23,15 @@ class Merchant extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+    /**
+     * Get the shop that owns the Merchant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function shop()
+    {
+        return $this->belongsTo('App\Models\Shop');
+    }
+
 }

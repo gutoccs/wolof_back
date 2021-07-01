@@ -30,4 +30,14 @@ class Shop extends Model
         'observation_flag_active',
     ];
 
+    /**
+     * Get all of the merchants for the Shop
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function merchants()
+    {
+        return $this->hasMany('App\Models\Merchant');
+    }
+
 }
