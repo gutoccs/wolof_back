@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Employee;
 use App\Models\Merchant;
-use App\Models\Shop;
+use App\Models\Commerce;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -25,7 +25,7 @@ class MerchantController extends Controller
         $merchants = Merchant::leftJoin('users', 'merchants.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                            ->leftJoin('shops', 'shops.id', '=', 'merchants.shop_id')
+                            ->leftJoin('commerces', 'commerces.id', '=', 'merchants.commerce_id')
                             ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee']);
 
 
@@ -82,7 +82,7 @@ class MerchantController extends Controller
         }
 
 
-        $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'shops.id as id_shop', 'shops.id_public as id_public_shop', 'shops.trade_name as trade_name_shop', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
+        $merchants = $merchants->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant')
                                 ->get();
 
         return response()->json(
@@ -110,7 +110,7 @@ class MerchantController extends Controller
             'name'                      =>  'required|string|between:4,64',
             'surname'                   =>  'required|string|between:4,64',
             'role_id'                   =>  'required|numeric|exists:roles,id|in:4,5',
-            'shop_id'                   =>  'numeric|exists:shops,id',
+            'commerce_id'                   =>  'numeric|exists:commerces,id',
         ],
         [
             'email.required'            =>  'El Correo Electrónico es requerido',
@@ -135,8 +135,8 @@ class MerchantController extends Controller
             'role_id.numeric'                   =>  'El ID del Rol debe ser numérico',
             'role_id.exists'                    =>  'El Rol No Existe en la BD',
             'role_id.in'                        =>  'El Rol No es válido para un Comerciante',
-            'shop_id.numeric'                   =>  'El ID de la Tienda debe ser numérico',
-            'shop_id.exists'                    =>  'La Tienda No Existe en la BD',
+            'commerce_id.numeric'               =>  'El ID del Comercio debe ser numérico',
+            'commerce_id.exists'                =>  'El Comercio No Existe en la BD',
         ]);
 
         if($validator->fails())
@@ -162,14 +162,14 @@ class MerchantController extends Controller
 
         if(Auth::user()->hasRole(['commerce.owner']))
         {
-            $merchant->shop_id = Auth::user()->merchant->shop->id;
+            $merchant->commerce_id = Auth::user()->merchant->commerce->id;
         }
         else
         {
-            if(!$request->exists('shop_id'))
-                return response()->json(['errors' => 'El ID de la Tienda es requerido'], 422);
+            if(!$request->exists('commerce_id'))
+                return response()->json(['errors' => 'El ID del Comercio es requerido'], 422);
 
-            $merchant->shop_id = $request->shop_id;
+            $merchant->commerce_id = $request->commerce_id;
         }
 
         if(!$merchant->save())
@@ -198,13 +198,13 @@ class MerchantController extends Controller
         $merchant = Merchant::leftJoin('users', 'merchants.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                            ->leftJoin('shops', 'shops.id', '=', 'merchants.shop_id')
+                            ->leftJoin('commerces', 'commerces.id', '=', 'merchants.commerce_id')
                             ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee']);
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
-            $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'shops.id as id_shop', 'shops.id_public as id_public_shop', 'shops.trade_name as trade_name_shop', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
+            $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
         else
-            $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'roles.name as name_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'shops.id as id_shop', 'shops.id_public as id_public_shop', 'shops.trade_name as trade_name_shop', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
+            $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'roles.name as name_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
 
         $merchant = $merchant->first();
 
@@ -239,7 +239,7 @@ class MerchantController extends Controller
             'cellphone_number'          =>  'string|between:4,32',
             'name'                      =>  'string|between:4,64',
             'surname'                   =>  'string|between:4,64',
-            'shop_id'                   =>  'numeric|exists:shops,id',
+            'commerce_id'                   =>  'numeric|exists:commerces,id',
         ],
         [
             'email.email'               =>  'Debe indicar un Correo Electrónico válido',
@@ -252,8 +252,8 @@ class MerchantController extends Controller
             'name.between'              =>  'La longitud del Nombre es entre 4 y 64 caracteres',
             'surname.string'            =>  'El Apellido es inválido',
             'surname.between'           =>  'La longitud del Apellido es entre 4 y 64 caracteres',
-            'shop_id.numeric'           =>  'El ID de la Tienda debe ser numérico',
-            'shop_id.exists'                    =>  'La Tienda No Existe en la BD',
+            'commerce_id.numeric'       =>  'El ID del Comercio debe ser numérico',
+            'commerce_id.exists'        =>  'El Comercio No Existe en la BD',
         ]);
 
         if($validator->fails())
@@ -297,9 +297,9 @@ class MerchantController extends Controller
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
         {
-            if($request->exists('shop_id'))
+            if($request->exists('commerce_id'))
             {
-                $merchant->shop_id = $request->shop_id;
+                $merchant->commerce_id = $request->commerce_id;
             }
         }
 

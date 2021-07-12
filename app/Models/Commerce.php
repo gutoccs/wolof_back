@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Shop extends Model
+class Commerce extends Model
 {
     use HasFactory, SoftDeletes;
 
-        /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -31,7 +31,7 @@ class Shop extends Model
     ];
 
     /**
-     * Get all of the merchants for the Shop
+     * Get all of the merchants for the Commerce
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -39,5 +39,4 @@ class Shop extends Model
     {
         return $this->hasMany('App\Models\Merchant');
     }
-
 }

@@ -3,7 +3,7 @@
 use App\models\Client;
 use App\models\Employee;
 use App\models\Merchant;
-use App\models\Shop;
+use App\models\Commerce;
 
 function generateIdPublic() :   string
 {
@@ -17,9 +17,9 @@ function generateIdPublic() :   string
         $auxC = Client::where('id_public', $auxIdPublic)->count();
         $auxE = Employee::where('id_public', $auxIdPublic)->count();
         $auxM = Merchant::where('id_public', $auxIdPublic)->count();
-        $auxS = Shop::where('id_public', $auxIdPublic)->count();
+        $auxC2 = Commerce::where('id_public', $auxIdPublic)->count();
 
-        if($auxC == 0 && $auxE == 0 && $auxM == 0 && $auxS == 0)
+        if($auxC == 0 && $auxE == 0 && $auxM == 0 && $auxC2 == 0)
             break;
     }
 

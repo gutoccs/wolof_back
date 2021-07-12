@@ -16,7 +16,7 @@ class Merchant extends Model
      * @var array
      */
 
-    protected $fillable = ['user_id', 'name', 'surname'];
+    protected $fillable = ['user_id', 'name', 'surname', 'commerce_id'];
 
     /* Usuario al que pertenece */
     public function user()
@@ -25,13 +25,13 @@ class Merchant extends Model
     }
 
     /**
-     * Get the shop that owns the Merchant
+     * Get the commerce that owns the Merchant
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function shop()
+    public function commerce()
     {
-        return $this->belongsTo('App\Models\Shop');
+        return $this->belongsTo('App\Models\Commerce');
     }
 
 }

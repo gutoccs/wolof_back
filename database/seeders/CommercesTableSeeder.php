@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
-use App\Models\Shop;
+use App\Models\Commerce;
 
-class ShopsTableSeeder extends Seeder
+class CommercesTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,13 +16,13 @@ class ShopsTableSeeder extends Seeder
     public function run()
     {
 
-        Shop::create([
+        Commerce::create([
             'id_public'     =>  Str::random(24),
             'trade_name'    =>  'Pida Pollo',
             'slogan'        =>  'No vueles, mejor come Pollo',
         ]);
 
-        Shop::create([
+        Commerce::create([
             'id_public'     =>  Str::random(24),
             'trade_name'    =>  'Porky',
             'slogan'        =>  'Un sabor diferente',

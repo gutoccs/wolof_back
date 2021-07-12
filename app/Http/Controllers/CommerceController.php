@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Shop;
+use App\Models\Commerce;
 use Illuminate\Http\Request;
 
-class ShopController extends Controller
+class CommerceController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,16 +13,6 @@ class ShopController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
     {
         //
     }
@@ -41,21 +31,10 @@ class ShopController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Shop  $shop
+     * @param  \App\Models\Commerce  $commerce
      * @return \Illuminate\Http\Response
      */
-    public function show(Shop $shop)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Shop  $shop
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Shop $shop)
+    public function show($idPublicCommerce)
     {
         //
     }
@@ -64,10 +43,10 @@ class ShopController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Shop  $shop
+     * @param  \App\Models\Commerce  $commerce
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Shop $shop)
+    public function update(Request $request, $idPublicCommerce)
     {
         //
     }
@@ -75,10 +54,10 @@ class ShopController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Shop  $shop
+     * @param  \App\Models\Commerce  $commerce
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Shop $shop)
+    public function destroy($idPublicCommerce)
     {
         //
     }
