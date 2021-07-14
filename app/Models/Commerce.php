@@ -39,4 +39,11 @@ class Commerce extends Model
     {
         return $this->hasMany('App\Models\Merchant');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function contact() {
+        return $this->hasOne('App\Models\Contact');
+    }
 }
