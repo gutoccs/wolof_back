@@ -27,6 +27,8 @@ class Contact extends Model
         'linkedin',
         'youtube',
         'tiktok',
+        'phone_1',
+        'phone_2',
     ];
 
 
