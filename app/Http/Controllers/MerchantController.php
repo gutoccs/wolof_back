@@ -28,6 +28,8 @@ class MerchantController extends Controller
                             ->leftJoin('commerces', 'commerces.id', '=', 'merchants.commerce_id')
                             ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee']);
 
+        if(Auth::user()->hasRole(['commerce.employee', 'commerce.owner']))
+            $merchants =  $merchants->where('merchants.commerce_id', Auth::user()->merchant->commerce_id);
 
         if($request->exists('id_user'))
              $merchants =  $merchants->where('users.id', $request->id_user);
@@ -110,7 +112,7 @@ class MerchantController extends Controller
             'name'                      =>  'required|string|between:4,64',
             'surname'                   =>  'required|string|between:4,64',
             'role_id'                   =>  'required|numeric|exists:roles,id|in:4,5',
-            'commerce_id'                   =>  'numeric|exists:commerces,id',
+            'commerce_id'               =>  'numeric|exists:commerces,id',
         ],
         [
             'email.required'            =>  'El Correo Electrónico es requerido',
@@ -199,15 +201,20 @@ class MerchantController extends Controller
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
                             ->leftJoin('commerces', 'commerces.id', '=', 'merchants.commerce_id')
-                            ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee']);
+                            ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee'])
+                            ->where('merchants.id_public', $idPublicMerchant);
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
             $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
         else
             $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'roles.name as name_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'users.cellphone_number as cellphone_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
 
-        $merchant = $merchant->first();
 
+        if(Auth::user()->hasRole(['commerce.employee', 'commerce.owner']))
+            $merchant =  $merchant->where('merchants.commerce_id', Auth::user()->merchant->commerce_id);
+
+
+        $merchant = $merchant->first();
 
         return response()->json(
             [
@@ -239,7 +246,7 @@ class MerchantController extends Controller
             'cellphone_number'          =>  'string|between:4,32',
             'name'                      =>  'string|between:4,64',
             'surname'                   =>  'string|between:4,64',
-            'commerce_id'                   =>  'numeric|exists:commerces,id',
+            'commerce_id'               =>  'numeric|exists:commerces,id',
         ],
         [
             'email.email'               =>  'Debe indicar un Correo Electrónico válido',
@@ -325,6 +332,12 @@ class MerchantController extends Controller
         if(!$merchant)
             return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
 
+        if(Auth::user()->hasRole('commerce.owner'))
+        {
+            if($merchant->commerce_id != Auth::user()->merchant->commerce_id)
+                return response()->json(['errors' => 'El Comerciante no pertenece a su Comercio'], 422);
+        }
+
         if($merchant->user->delete())
             $merchant->delete();
 
@@ -337,6 +350,12 @@ class MerchantController extends Controller
 
         if(!$merchant)
             return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+
+        if(Auth::user()->hasRole('commerce.owner'))
+        {
+            if($merchant->commerce_id != Auth::user()->merchant->commerce_id)
+                return response()->json(['errors' => 'El Comerciante no pertenece a su Comercio'], 422);
+        }
 
         $validator = Validator::make($request->all(),
         [

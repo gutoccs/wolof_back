@@ -92,15 +92,18 @@ Route::group([
     ]
 ], function() {
 
-    Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
+    Route::group(['middleware' => ['checkIsEmployeeOrMerchant']], function () {
         Route::get('/', [MerchantController::class, 'index']);
+        Route::get('/{idPublicMerchant}', [MerchantController::class, 'show'])->where('idPublicMerchant', '[A-Za-z0-9]+');
+    });
+
+    Route::group(['middleware' => ['checkIsEmployeeOrCommerceOwner']], function () {
         Route::post('/', [MerchantController::class, 'store']);
         Route::put('/{idPublicMerchant}/change-role', [MerchantController::class, 'changeRole'])->where('idPublicMerchant', '[A-Za-z0-9]+');
         Route::delete('/{idPublicMerchant}', [MerchantController::class, 'destroy'])->where('idPublicMerchant', '[A-Za-z0-9]+');
     });
 
-    Route::group(['middleware' => ['checkIsSelfMerchantOrEmployee']], function () {
-        Route::get('/{idPublicMerchant}', [MerchantController::class, 'show'])->where('idPublicMerchant', '[A-Za-z0-9]+');
+    Route::group(['middleware' => ['checkIsSelfMerchantOrCommerceOwnerOrEmployee']], function () {
         Route::put('/{idPublicMerchant}', [MerchantController::class, 'update'])->where('idPublicMerchant', '[A-Za-z0-9]+');
     });
 

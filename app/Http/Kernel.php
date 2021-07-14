@@ -67,5 +67,8 @@ class Kernel extends HttpKernel
         'checkIsSelfClientOrEmployee'  =>  \App\Http\Middleware\CheckIsSelfClientOrEmployee::class,
         'checkIsSelfEmployeeOrLevel10'  =>  \App\Http\Middleware\CheckIsSelfEmployeeOrLevel10::class,
         'checkIsSelfMerchantOrEmployee'  =>  \App\Http\Middleware\CheckIsSelfMerchantOrEmployee::class,
+        'checkIsEmployeeOrCommerceOwner'  =>  \App\Http\Middleware\CheckIsEmployeeOrCommerceOwner::class,
+        'checkIsEmployeeOrMerchant'  =>  \App\Http\Middleware\CheckIsEmployeeOrMerchant::class,
+        'checkIsSelfMerchantOrCommerceOwnerOrEmployee'  =>  \App\Http\Middleware\CheckIsSelfMerchantOrCommerceOwnerOrEmployee::class,
     ];
 }
