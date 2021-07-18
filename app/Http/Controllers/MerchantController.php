@@ -238,6 +238,12 @@ class MerchantController extends Controller
         if(!$merchant)
             return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
 
+        if(Auth::user()->hasRole('commerce.owner'))
+        {
+            if($merchant->commerce_id != Auth::user()->merchant->commerce_id)
+                return response()->json(['errors' => 'El Comerciante no pertenece a su Comercio'], 422);
+        }
+
         $validator = Validator::make($request->all(),
         [
             'email'                     =>  'email',
