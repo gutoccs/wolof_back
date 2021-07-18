@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\UserController;
@@ -105,6 +106,28 @@ Route::group([
 
     Route::group(['middleware' => ['checkIsSelfMerchantOrCommerceOwnerOrEmployee']], function () {
         Route::put('/{idPublicMerchant}', [MerchantController::class, 'update'])->where('idPublicMerchant', '[A-Za-z0-9]+');
+    });
+
+});
+
+
+Route::group([
+    'prefix'    =>  'commerce',
+    'middleware'    => [
+        'auth:api'
+    ]
+], function() {
+
+    Route::get('/', [CommerceController::class, 'index']);
+    Route::get('/{idPublicCommerce}', [CommerceController::class, 'show'])->where('idPublicCommerce', '[A-Za-z0-9]+');
+
+    Route::group(['middleware' => ['checkIsEmployeeOrCommerceOwner']], function () {
+        Route::put('/{idPublicCommerce}', [CommerceController::class, 'update'])->where('idPublicCommerce', '[A-Za-z0-9]+');
+    });
+
+    Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
+        Route::post('/', [CommerceController::class, 'store']);
+        Route::put('/{idPublicCommerce}/flag-active', [CommerceController::class, 'flagActive'])->where('idPublicCommerce', '[A-Za-z0-9]+');
     });
 
 });
