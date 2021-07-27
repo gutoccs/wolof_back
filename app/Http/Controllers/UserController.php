@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use \Gumlet\ImageResize;
 
 class UserController extends Controller
 {
@@ -190,4 +194,127 @@ class UserController extends Controller
 
         return response()->json(['error' => 'No se pudo actualizar flag_login del usuario'], 422);
     }
+
+    public function updateProfileImage(Request $request)
+    {
+        // TODO: ratio:1/1 en dimensions, la imagen debe venir cuadrada del mobile
+
+        $validator = Validator::make($request->all(),
+        [
+            'image' =>  'required|file|max:3072|dimensions:min_width=300,max_width=3200,min_height=300,max_height=3200|mimes:jpeg,bmp,png'
+        ],
+        [
+            'image.required'        =>  'La imagen es requerida',
+            'image.file'            =>  'La imagen debe ser un tipo de archivo',
+            'image.max'             =>  'La imagen debe tener un peso máximo de 3MB',
+            'image.dimensions'      =>  'El tamaño de la imagen debe estar entre 300px y 3200px',
+            'image.mimes'           =>  'La imagen debe ser jpg, bmp o png'
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors' => $validator->errors()], 422);
+
+        $userId;
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            $validator = Validator::make($request->all(),
+            [
+                'user_id'           =>  'exists:users,id'
+            ],
+            [
+                'user_id.exists'    =>  'El usuario no existe en Wolof',
+            ]);
+
+            if($validator->fails())
+                return response()->json(['errors' => $validator->errors()], 422);
+
+            if($request->exists('user_id'))
+                $userId = $request->user_id;
+            else
+                $userId = Auth::user()->id;
+
+        }
+        else
+        {
+            $userId = Auth::user()->id;
+        }
+
+        $user = User::find($userId);
+
+        $auxPath = "files/users/profile-image/" . $user->id;
+        $path = public_path($auxPath);
+        File::deleteDirectory($path); //Garantiza de borrar las imágenes de perfil anterior
+        Storage::makeDirectory($path);
+
+        //original_profile_image
+        $auxIMG = $request->image;
+        $extension = $auxIMG->extension();
+        $originalName = str_replace(' ','', $auxIMG->getClientOriginalName());
+        $auxIMG->move($path, $originalName);
+
+        $fullPathOriginalImage = $auxPath . '/' . $originalName;
+        $user->original_profile_image = $auxPath . '/' . $originalName;
+
+        $fullPathNewImage = $auxPath . '/' . Str::random(12) . '.' . $extension;
+        $image = new ImageResize($fullPathOriginalImage);
+        $image->resize(180, 180);
+        $image->save($fullPathNewImage);
+        $user->thumbnail_profile_image = $fullPathNewImage;
+
+        $fullPathNewImage = $auxPath . '/' . Str::random(12) . '.' . $extension;
+        $image = new ImageResize($fullPathOriginalImage);
+        $image->resize(60, 60);
+        $image->save($fullPathNewImage);
+        $user->avatar_profile_image = $fullPathNewImage;
+
+        $user->save();
+
+        return response()->json(['status' => 'success'], 200);
+
+    }
+
+    public function removeProfileImage(Request $request)
+    {
+        $userId;
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            $validator = Validator::make($request->all(),
+            [
+                'user_id'           =>  'exists:users,id'
+            ],
+            [
+                'user_id.exists'    =>  'El usuario no existe en Wolof',
+            ]);
+
+            if($validator->fails())
+                return response()->json(['errors' => $validator->errors()], 422);
+
+            if($request->exists('user_id'))
+                $userId = $request->user_id;
+            else
+                $userId = Auth::user()->id;
+
+        }
+        else
+        {
+            $userId = Auth::user()->id;
+        }
+
+        $user = User::find($userId);
+
+        $auxPath = "files/users/profile-image/" . $user->id;
+        $path = public_path($auxPath);
+        File::deleteDirectory($path); //Garantiza de borrar las imágenes de perfil anterior
+
+        $user->original_profile_image = null;
+        $user->thumbnail_profile_image = null;
+        $user->avatar_profile_image = null;
+
+        $user->save();
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
 }

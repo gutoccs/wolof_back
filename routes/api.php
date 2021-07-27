@@ -26,19 +26,23 @@ Route::prefix('auth')->group(function () {
 Route::group([
     'prefix'        =>  'user',
     'middleware'    => [
-        'auth:api',
-        'checkTypeOfUser:employee'
+        'auth:api'
     ],
 ], function() {
 
-    Route::get('/', [UserController::class, 'index']);
-    Route::get('/{idUser}', [UserController::class, 'show'])->where('idUser', '\d+');
+    Route::post('/update-profile-image', [UserController::class, 'updateProfileImage'])->where('idUser', '\d+');
+    Route::delete('/remove-profile-image', [UserController::class, 'removeProfileImage'])->where('idUser', '\d+');
+
+    Route::group(['middleware' => 'checkTypeOfUser:employee'], function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('/{idUser}', [UserController::class, 'show'])->where('idUser', '\d+');
+        Route::put('/{idUser}/flag-login', [UserController::class, 'flagLogin'])->where('idUser', '\d+');
+    });
 
     Route::group(['middleware' => 'checkMinimumLevel:10'], function () {
         Route::delete('/{idUser}', [UserController::class, 'destroy'])->where('idUser', '\d+');
     });
 
-    Route::put('/{idUser}/flag-login', [UserController::class, 'flagLogin'])->where('idUser', '\d+');
 
 });
 
