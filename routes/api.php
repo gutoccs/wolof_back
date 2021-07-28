@@ -30,8 +30,8 @@ Route::group([
     ],
 ], function() {
 
-    Route::post('/update-profile-image', [UserController::class, 'updateProfileImage'])->where('idUser', '\d+');
-    Route::delete('/remove-profile-image', [UserController::class, 'removeProfileImage'])->where('idUser', '\d+');
+    Route::post('/update-profile-image', [UserController::class, 'updateProfileImage']);
+    Route::delete('/remove-profile-image', [UserController::class, 'removeProfileImage']);
 
     Route::group(['middleware' => 'checkTypeOfUser:employee'], function () {
         Route::get('/', [UserController::class, 'index']);
@@ -127,6 +127,8 @@ Route::group([
 
     Route::group(['middleware' => ['checkIsEmployeeOrCommerceOwner']], function () {
         Route::put('/{idPublicCommerce}', [CommerceController::class, 'update'])->where('idPublicCommerce', '[A-Za-z0-9]+');
+        Route::post('/update-profile-image', [CommerceController::class, 'updateProfileImage'])->where('idUser', '\d+');
+        Route::delete('/remove-profile-image', [CommerceController::class, 'removeProfileImage'])->where('idUser', '\d+');
     });
 
     Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {

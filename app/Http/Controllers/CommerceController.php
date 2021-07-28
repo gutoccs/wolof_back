@@ -6,8 +6,12 @@ use App\Models\Contact;
 use App\Models\Commerce;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use jeremykenedy\LaravelRoles\Models\Role;
+use Illuminate\Support\Str;
+use \Gumlet\ImageResize;
 
 class CommerceController extends Controller
 {
@@ -335,5 +339,122 @@ class CommerceController extends Controller
             return response()->json(['status'   =>  'success'], 200);
 
         return response()->json(['errors'   =>  'No se pudo actualizar el Comercio'], 422);
+    }
+
+    public function updateProfileImage(Request $request)
+    {
+        // TODO: ratio:1/1 en dimensions, la imagen debe venir cuadrada del mobile
+
+        $validator = Validator::make($request->all(),
+        [
+            'image' =>  'required|file|max:3072|dimensions:min_width=300,max_width=3200,min_height=300,max_height=3200|mimes:jpeg,bmp,png'
+        ],
+        [
+            'image.required'        =>  'La imagen es requerida',
+            'image.file'            =>  'La imagen debe ser un tipo de archivo',
+            'image.max'             =>  'La imagen debe tener un peso máximo de 3MB',
+            'image.dimensions'      =>  'El tamaño de la imagen debe estar entre 300px y 3200px',
+            'image.mimes'           =>  'La imagen debe ser jpg, bmp o png'
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors' => $validator->errors()], 422);
+
+        $commerceId;
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+
+            $validator = Validator::make($request->all(),
+            [
+                'commerce_id'           =>  'required|exists:commerces,id'
+            ],
+            [
+                'commerce_id.required'  =>  'El ID del Comercio es Requerido',
+                'commerce_id.exists'    =>  'El Comercio no existe en Wolof',
+            ]);
+
+            if($validator->fails())
+                return response()->json(['errors' => $validator->errors()], 422);
+
+            $commerceId = $request->commerce_id;
+        }
+        else
+        {
+            $commerceId = Auth::user()->merchant->commerce->id;
+        }
+
+        $commerce = Commerce::find($commerceId);
+
+        $auxPath = "files/commerces/profile-image/" . $commerce->id;
+        $path = public_path($auxPath);
+        File::deleteDirectory($path); //Garantiza de borrar las imágenes de perfil anterior
+        Storage::makeDirectory($path);
+
+        //original_profile_image
+        $auxIMG = $request->image;
+        $extension = $auxIMG->extension();
+        $originalName = str_replace(' ','', $auxIMG->getClientOriginalName());
+        $auxIMG->move($path, $originalName);
+
+        $fullPathOriginalImage = $auxPath . '/' . $originalName;
+        $commerce->original_profile_image = $auxPath . '/' . $originalName;
+
+        $fullPathNewImage = $auxPath . '/' . Str::random(12) . '.' . $extension;
+        $image = new ImageResize($fullPathOriginalImage);
+        $image->resize(180, 180);
+        $image->save($fullPathNewImage);
+        $commerce->thumbnail_profile_image = $fullPathNewImage;
+
+        $fullPathNewImage = $auxPath . '/' . Str::random(12) . '.' . $extension;
+        $image = new ImageResize($fullPathOriginalImage);
+        $image->resize(60, 60);
+        $image->save($fullPathNewImage);
+        $commerce->avatar_profile_image = $fullPathNewImage;
+
+        $commerce->save();
+
+        return response()->json(['status' => 'success'], 200);
+
+    }
+
+    public function removeProfileImage(Request $request)
+    {
+        $commerceId;
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        {
+            $validator = Validator::make($request->all(),
+            [
+                'commerce_id'           =>  'required|exists:commerces,id'
+            ],
+            [
+                'commerce_id.required'  =>  'El ID del Comercio es Requerido',
+                'commerce_id.exists'    =>  'El Comercio no existe en Wolof',
+            ]);
+
+            if($validator->fails())
+                return response()->json(['errors' => $validator->errors()], 422);
+
+            $commerceId = $request->commerce_id;
+        }
+        else
+        {
+            $commerceId = Auth::user()->merchant->commerce->id;
+        }
+
+        $commerce = Commerce::find($commerceId);
+
+        $auxPath = "files/commerces/profile-image/" . $commerce->id;
+        $path = public_path($auxPath);
+        File::deleteDirectory($path); //Garantiza de borrar las imágenes de perfil anterior
+
+        $commerce->original_profile_image = null;
+        $commerce->thumbnail_profile_image = null;
+        $commerce->avatar_profile_image = null;
+
+        $commerce->save();
+
+        return response()->json(['status' => 'success'], 200);
     }
 }
