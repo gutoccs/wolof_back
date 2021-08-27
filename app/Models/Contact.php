@@ -29,6 +29,7 @@ class Contact extends Model
         'tiktok',
         'phone_1',
         'phone_2',
+        'email',
     ];
 
 

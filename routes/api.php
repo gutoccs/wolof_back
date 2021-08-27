@@ -124,11 +124,13 @@ Route::group([
 
     Route::get('/', [CommerceController::class, 'index']);
     Route::get('/{idPublicCommerce}', [CommerceController::class, 'show'])->where('idPublicCommerce', '[A-Za-z0-9]+');
+    Route::get('/{idPublicCommerce}/contact', [CommerceController::class, 'showContact'])->where('idPublicCommerce', '[A-Za-z0-9]+');
 
     Route::group(['middleware' => ['checkIsEmployeeOrCommerceOwner']], function () {
         Route::put('/{idPublicCommerce}', [CommerceController::class, 'update'])->where('idPublicCommerce', '[A-Za-z0-9]+');
-        Route::post('/update-profile-image', [CommerceController::class, 'updateProfileImage'])->where('idUser', '\d+');
-        Route::delete('/remove-profile-image', [CommerceController::class, 'removeProfileImage'])->where('idUser', '\d+');
+        Route::post('/update-profile-image', [CommerceController::class, 'updateProfileImage']);
+        Route::delete('/remove-profile-image', [CommerceController::class, 'removeProfileImage']);
+        Route::put('/{idPublicCommerce}/contact', [CommerceController::class, 'updateContact'])->where('idPublicCommerce', '[A-Za-z0-9]+');
     });
 
     Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {

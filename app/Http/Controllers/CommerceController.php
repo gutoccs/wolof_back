@@ -457,4 +457,125 @@ class CommerceController extends Controller
 
         return response()->json(['status' => 'success'], 200);
     }
+
+    public function showContact($idPublicCommerce)
+    {
+        if(Commerce::where('id_public', $idPublicCommerce)->count() == 0)
+            return response()->json(['errors'   =>  'El Comercio no existe'], 422);
+
+        $commerce = Commerce::where('id_public', $idPublicCommerce)->first();
+
+        $contact = Contact::where('commerce_id', $commerce->id)
+                            ->select('commerce_id as id_commerce', 'web as web_contact', 'whatsapp as whatsapp_contact', 'instagram as instagram_contact', 'facebook as facebook_contact', 'twitter as twitter_contact', 'linkedin as linkedin_contact', 'youtube as youtube_contact', 'tiktok as tiktok_contact', 'phone_1 as phone_1_contact', 'phone_2 as phone_2_contact', 'email as email_contact',)
+                            ->first();
+
+        return response()->json([
+            'status' => 'success',
+            'contact'  => $contact
+        ], 200);
+    }
+
+    public function updateContact(Request $request, $idPublicCommerce)
+    {
+
+        $commerce = Commerce::where('id_public', $idPublicCommerce)->first();
+
+        if(!$commerce)
+            return response()->json(['errors'   =>  'El Comercio no existe'], 422);
+
+        if(Auth::user()->hasRole('commerce.owner'))
+        {
+            if(Auth::user()->merchant->commerce_id != $commerce->id)
+                return response()->json(['errors'   =>  'El Comercio no le pertenece'], 422);
+        }
+
+        $validator = Validator::make($request->all(),
+        [
+            'web'           =>  'url|max:128',
+            'whatsapp'      =>  'string|between:4,32|unique:contacts',
+            'instagram'     =>  'string|max:128',
+            'facebook'      =>  'url|max:128',
+            'twitter'       =>  'string|max:128',
+            'linkedin'      =>  'url|max:128',
+            'youtube'       =>  'url|max:128',
+            'tiktok'        =>  'url|max:128',
+            'phone_1'       =>  'string|between:4,32',
+            'phone_2'       =>  'string|between:4,32',
+            'email'         =>  'email|max:128',
+        ],
+        [
+
+            'web.url'               =>  'La web no es una URL válida',
+            'web.max'               =>  'La Web debe tener una longitud máxina de 128 caracteres',
+            'whatsapp.string'       =>  'WhatsApp tiene un formato inválido ',
+            'whatsapp.between'      =>  'La longitud del WhatsApp debe ser entre 4 y 32 caracteres',
+            'whatsapp.unique'       =>  'El número de WhatsApp ya está siendo utilizado',
+            'instagram.string'      =>  'Instagram tiene un formato inválido',
+            'instagram.max'         =>  'Instagram debe tener una longitud máxina de 128 caracteres',
+            'facebook.url'          =>  'Facebook no es una URL válida',
+            'facebook.max'          =>  'Facebook debe tener una longitud máxina de 128 caracteres',
+            'twitter.string'        =>  'Twitter tiene un formato inválido',
+            'twitter.max'           =>  'Twitter debe tener una longitud máxina de 128 caracteres',
+            'linkedin.url'          =>  'Linkedin no es una URL válida',
+            'linkedin.max'          =>  'Linkedin debe tener una longitud máxina de 128 caracteres',
+            'youtube.url'           =>  'Youtube no es una URL válida',
+            'youtube.max'           =>  'Youtube debe tener una longitud máxina de 128 caracteres',
+            'tiktok.url'            =>  'TikTok no es una URL válida',
+            'tiktok.max'            =>  'TikTok debe tener una longitud máxina de 128 caracteres',
+            'phone_1.string'        =>  'El Teléfono 1 tiene un formato inválido ',
+            'phone_1.between'       =>  'La longitud del Teléfono 1 debe ser entre 4 y 32 caracteres',
+            'phone_2.string'        =>  'El Teléfono 2 tiene un formato inválido ',
+            'phone_2.between'       =>  'La longitud del Teléfono 2 debe ser entre 4 y 32 caracteres',
+            'email.email'           =>  'El Correo Electrónico tiene un formato inválido',
+            'email.max'             =>  'El Correo Electrónico debe tener una longitud máxina de 128 caracteres',
+        ]);
+
+        if($validator->fails())
+                return response()->json(['errors' => $validator->errors()], 422);
+
+
+        if($request->exists('web'))
+            $commerce->contact->web = $request->web;
+
+        if($request->exists('whatsapp'))
+            $commerce->contact->whatsapp = $request->whatsapp;
+
+        if($request->exists('instagram'))
+            $commerce->contact->instagram = $request->instagram;
+
+        if($request->exists('facebook'))
+            $commerce->contact->facebook = $request->facebook;
+
+        if($request->exists('twitter'))
+            $commerce->contact->twitter = $request->twitter;
+
+        if($request->exists('linkedin'))
+            $commerce->contact->linkedin = $request->linkedin;
+
+        if($request->exists('youtube'))
+            $commerce->contact->youtube = $request->youtube;
+
+        if($request->exists('tiktok'))
+            $commerce->contact->tiktok = $request->tiktok;
+
+        if($request->exists('phone_1'))
+            $commerce->contact->phone_1 = $request->phone_1;
+
+        if($request->exists('phone_2'))
+            $commerce->contact->phone_2 = $request->phone_2;
+
+        if($request->exists('email'))
+            $commerce->contact->email = $request->email;
+
+        if($commerce->contact->save())
+            return response()->json(['status' => 'success'], 200);
+
+        return response()->json(['errors'   => 'No se pudo actualizar el Contacto del Comercio']);
+
+    }
+
+
 }
+
+
+
