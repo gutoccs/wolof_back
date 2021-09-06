@@ -16,7 +16,7 @@ class Merchant extends Model
      * @var array
      */
 
-    protected $fillable = ['user_id', 'name', 'surname', 'commerce_id'];
+    protected $fillable = ['user_id', 'name', 'surname', 'id_public', 'commerce_id'];
 
     /* Usuario al que pertenece */
     public function user()

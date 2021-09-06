@@ -16,7 +16,7 @@ class Client extends Model
      * @var array
      */
 
-    protected $fillable = ['user_id', 'name', 'surname'];
+    protected $fillable = ['user_id', 'name', 'surname', 'id_public'];
 
     /* Usuario al que pertenece */
     public function user()
