@@ -1,9 +1,9 @@
 <?php
 
-use App\models\Client;
-use App\models\Employee;
-use App\models\Merchant;
-use App\models\Commerce;
+use App\Models\Client;
+use App\Models\Employee;
+use App\Models\Merchant;
+use App\Models\Commerce;
 use Illuminate\Support\Str;
 
 function generateIdPublic() :   string

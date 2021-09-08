@@ -14,7 +14,7 @@ class AddEmailInContactsTable extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->string('email')->unique();
+            $table->string('email')->nullable()->unique();
         });
     }
 
