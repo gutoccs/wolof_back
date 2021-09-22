@@ -6,6 +6,7 @@
 .env
 .env.backup
 .env.server
+.env.server.gutoccs
 .phpunit.result.cache
 docker-compose.override.yml
 Homestead.json
