@@ -47,4 +47,9 @@ class Commerce extends Model
     public function contact() {
         return $this->hasOne('App\Models\Contact');
     }
+
+    public function offers()
+    {
+        return $this->hasMany('App\Models\Offer');
+    }
 }

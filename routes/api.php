@@ -7,6 +7,7 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\OfferController;
 use App\Http\Controllers\UserController;
 
 
@@ -136,6 +137,25 @@ Route::group([
     Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
         Route::post('/', [CommerceController::class, 'store']);
         Route::put('/{idPublicCommerce}/flag-active', [CommerceController::class, 'flagActive'])->where('idPublicCommerce', '[A-Za-z0-9]+');
+    });
+
+});
+
+Route::group([
+    'prefix'    =>  'offer',
+    'middleware'    => [
+        'auth:api'
+    ]
+], function() {
+
+    Route::get('/', [OfferController::class, 'index']);
+    Route::get('/{idOffer}', [OfferController::class, 'show'])->where('idOffer', '\d+');
+
+    Route::group(['middleware' => ['checkIsEmployeeOrMerchant']], function () {
+        Route::post('/', [OfferController::class, 'store']);
+        Route::put('/{idOffer}', [OfferController::class, 'update'])->where('idOffer', '\d+');
+        //Route::delete('{idOffer}', [OfferController::class, 'destroy'])->where('idOffer', '\d+');
+        Route::post('/{idOffer}/update-image', [OfferController::class, 'updateImage'])->where('idOffer', '\d+');
     });
 
 });

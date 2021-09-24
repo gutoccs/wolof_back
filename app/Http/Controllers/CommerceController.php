@@ -350,11 +350,11 @@ class CommerceController extends Controller
             'image' =>  'required|file|max:3072|dimensions:min_width=300,max_width=3200,min_height=300,max_height=3200|mimes:jpeg,bmp,png'
         ],
         [
-            'image.required'        =>  'La imagen es requerida',
-            'image.file'            =>  'La imagen debe ser un tipo de archivo',
-            'image.max'             =>  'La imagen debe tener un peso máximo de 3MB',
-            'image.dimensions'      =>  'El tamaño de la imagen debe estar entre 300px y 3200px',
-            'image.mimes'           =>  'La imagen debe ser jpg, bmp o png'
+            'image.required'        =>  'La Imagen es requerida',
+            'image.file'            =>  'La Imagen debe ser un tipo de archivo',
+            'image.max'             =>  'La Imagen debe tener un peso máximo de 3MB',
+            'image.dimensions'      =>  'El tamaño de la Imagen debe estar entre 300px y 3200px',
+            'image.mimes'           =>  'La Imagen debe ser jpg, bmp o png'
         ]);
 
         if($validator->fails())

@@ -34,4 +34,9 @@ class Merchant extends Model
         return $this->belongsTo('App\Models\Commerce');
     }
 
+    public function offers()
+    {
+        return $this->hasMany('App\Models\Offer');
+    }
+
 }
