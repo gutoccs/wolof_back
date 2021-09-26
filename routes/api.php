@@ -7,7 +7,8 @@ use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MerchantController;
-use App\Http\Controllers\OfferController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserController;
 
 
@@ -142,20 +143,42 @@ Route::group([
 });
 
 Route::group([
-    'prefix'    =>  'offer',
+    'prefix'    =>  'product',
     'middleware'    => [
         'auth:api'
     ]
 ], function() {
 
-    Route::get('/', [OfferController::class, 'index']);
-    Route::get('/{idOffer}', [OfferController::class, 'show'])->where('idOffer', '\d+');
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/{idProduct}', [ProductController::class, 'show'])->where('idProduct', '\d+');
 
     Route::group(['middleware' => ['checkIsEmployeeOrMerchant']], function () {
-        Route::post('/', [OfferController::class, 'store']);
-        Route::put('/{idOffer}', [OfferController::class, 'update'])->where('idOffer', '\d+');
-        //Route::delete('{idOffer}', [OfferController::class, 'destroy'])->where('idOffer', '\d+');
-        Route::post('/{idOffer}/update-image', [OfferController::class, 'updateImage'])->where('idOffer', '\d+');
+        Route::post('/', [ProductController::class, 'store']);
+        Route::put('/{idProduct}', [ProductController::class, 'update'])->where('idProduct', '\d+');
+        //Route::delete('{idProduct}', [ProductController::class, 'destroy'])->where('idProduct', '\d+');
+        Route::post('/{idProduct}/update-image', [ProductController::class, 'updateImage'])->where('idProduct', '\d+');
+    });
+
+});
+
+Route::group([
+    'prefix'    =>  'purchase',
+    'middleware'    => [
+        'auth:api'
+    ]
+], function() {
+
+    Route::get('/', [PurchaseController::class, 'index']);
+    Route::get('/{idPurchase}', [PurchaseController::class, 'show'])->where('idPurchase', '\d+');
+    Route::put('/{idPurchase}/cancel', [PurchaseController::class, 'cancelPurchase'])->where('idPurchase', '\d+');
+    Route::put('/{idPurchase}/completed', [PurchaseController::class, 'changeToCompleted'])->where('idPurchase', '\d+');
+
+    Route::group(['middleware' => ['checkTypeOfUser:client']], function () {
+        Route::post('/', [PurchaseController::class, 'store']);
+    });
+
+    Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
+        Route::put('/{idPurchase}/clean', [PurchaseController::class, 'cleanPurchase'])->where('idPurchase', '\d+');
     });
 
 });

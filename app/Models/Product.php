@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Offer extends Model
+class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -23,6 +23,7 @@ class Offer extends Model
         'title',
         'description',
         'status',
+        'quantity_available',
         'price',
         'sales',
         'original_image',
@@ -37,17 +38,23 @@ class Offer extends Model
     }
 
 
-    /* Comerciante que creó la oferta */
+    /* Comerciante que creó el producto */
     public function merchant()
     {
         return $this->belongsTo('App\Models\Merchant');
     }
 
 
-    /* Empleado que montó la oferta */
+    /* Empleado que montó el producto */
     public function employee()
     {
         return $this->belongsTo('App\Models\Employee');
+    }
+
+    // Compras realizadas con este producto
+    public function purchases()
+    {
+        return $this->hasMany('App\Models\Purchase');
     }
 
 

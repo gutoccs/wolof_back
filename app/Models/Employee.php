@@ -24,8 +24,14 @@ class Employee extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function offers()
+    public function products()
     {
-        return $this->hasMany('App\Models\Offer');
+        return $this->hasMany('App\Models\Product');
+    }
+
+    // Compras canceladas, solo si aplica
+    public function purchases()
+    {
+        return $this->hasMany('App\Models\Purchase');
     }
 }

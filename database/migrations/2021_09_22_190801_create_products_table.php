@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOffersTable extends Migration
+class CreateProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOffersTable extends Migration
      */
     public function up()
     {
-        Schema::create('offers', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('commerce_id');
@@ -25,7 +25,9 @@ class CreateOffersTable extends Migration
 
             $table->string('title', 64);
             $table->string('description', 128)->nullable();
-            $table->enum('status', ['active', 'suspended'])->default('active');
+            $table->enum('status', ['active', 'suspended'])->default('suspended');
+            $table->unsignedSmallInteger('quantity_available')->default(0);
+
 
             $table->decimal('price', 19, 2);
 
@@ -52,6 +54,6 @@ class CreateOffersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('offers');
+        Schema::dropIfExists('products');
     }
 }

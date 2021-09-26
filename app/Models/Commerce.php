@@ -48,8 +48,14 @@ class Commerce extends Model
         return $this->hasOne('App\Models\Contact');
     }
 
-    public function offers()
+    public function products()
     {
-        return $this->hasMany('App\Models\Offer');
+        return $this->hasMany('App\Models\Product');
+    }
+
+    // Compras realizadas
+    public function purchases()
+    {
+        return $this->hasMany('App\Models\Purchase');
     }
 }

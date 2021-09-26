@@ -24,4 +24,10 @@ class Client extends Model
         return $this->belongsTo('App\Models\User');
     }
 
+    // Compras realizadas
+    public function purchases()
+    {
+        return $this->hasMany('App\Models\Purchase');
+    }
+
 }
