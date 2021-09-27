@@ -7,6 +7,7 @@ use App\Models\Employee;
 use App\Models\Merchant;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -96,7 +97,73 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        // alpha_dash debe ser el username
+
+        $validator = Validator::make($request->all(),
+        [
+            'name'                  =>  'required|alpha|max:64',
+            'surname'               =>  'required|alpha|max:64',
+            'email'                 =>  'required|email|max:255|unique:users',
+            'cellphone_number'      =>  'required|string|max:32|unique:users',
+            'password'              =>  'required|string|max:255'
+        ],
+        [
+            'name.required'             =>  'El Nombre es requerido',
+            'name.alpha'                =>  'El Nombre debe contener solo Caracteres Alfabéticos',
+            'name.max'                  =>  'El Nombre debe tener una longitud máxima de 64 caracteres',
+            'surname.required'          =>  'El Apellido es requerido',
+            'surname.alpha'             =>  'El Apellido debe contener solo Caracteres Alfabéticos',
+            'surname.max'               =>  'El Apellido debe tener una longitud máxima de 64 caracteres',
+            'email.required'            =>  'El Correo Electrónico es requerido',
+            'email.email'               =>  'El Correo Electrónico tiene un formato inválido',
+            'email.max'                 =>  'El Correo Electrónico debe tener una longitud máxima de 255 caracteres',
+            'email.unique'              =>  'El Correo Electrónico ya está siendo utilizado',
+            'cellphone_number.required' =>  'El Teléfono Celular es requerido',
+            'cellphone_number.string'   =>  'El Teléfono Celular tiene caracteres inválidos',
+            'cellphone_number.max'      =>  'El Teléfono Celular debe contener una longitud máxima de 32 caracteres',
+            'cellphone_number.unique'   =>  'El Teléfono Celular ya está siendo utilizado',
+            'password.required'         =>  'La Contraseña es requerida',
+            'password.string'           =>  'La Contraseña contiene caracteres inválidos',
+            'password.max'              =>  'La Contraseña debe contener una longitud máxima de 255 caracteres',
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors'   =>  $validator->errors()], 422);
+
+        if(isset(Auth::user()->client->id) || isset(Auth::user()->merchant->id))
+            return response()->json(['errors'   =>  'No tiene permiso para crear Clientes'], 422);
+
+
+        $token = Str::random(24);
+
+        $user = new User();
+        $user->email = strtolower($request->email);
+        $user->password = bcrypt($request->password);
+        $user->cellphone_number = $request->cellphone_number;
+        $user->flag_login = true;
+        $user->observation_flag_login = 'Email sin verificar - ' . $token;
+
+        if(!$user->save())
+            return response()->json(['errors' => 'No se pudo crear el Usuario del Cliente'], 422);
+
+        $client = new Client();
+
+        $client->user_id = $user->id;
+        $client->name = $request->name;
+        $client->surname = $request->surname;
+
+        $client->id_public = generateIdPublic();
+
+        if(!$client->save())
+        {
+            $user->forceDelete();
+                return response()->json(['errors'   =>  'No se pudo crear al Cliente'], 422);
+        }
+
+        $newRole = config('roles.models.role')::where('slug', '=', 'client')->first();
+        $client->user->attachRole($newRole);
+
+        return response()->json(['status' => 'success'], 200);
+
     }
 
     /**
@@ -140,7 +207,7 @@ class ClientController extends Controller
      */
     public function update(Request $request, $idPublicClient)
     {
-        //
+
     }
 
     /**
