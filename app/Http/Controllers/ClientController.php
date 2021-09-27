@@ -100,26 +100,26 @@ class ClientController extends Controller
 
         $validator = Validator::make($request->all(),
         [
-            'name'                  =>  'required|alpha|max:64',
-            'surname'               =>  'required|alpha|max:64',
+            'name'                  =>  'required|alpha|between:4,64',
+            'surname'               =>  'required|alpha|between:4,64',
             'email'                 =>  'required|email|max:255|unique:users',
-            'cellphone_number'      =>  'required|string|max:32|unique:users',
+            'cellphone_number'      =>  'required|string|between:4,32|unique:users',
             'password'              =>  'required|string|max:255'
         ],
         [
             'name.required'             =>  'El Nombre es requerido',
             'name.alpha'                =>  'El Nombre debe contener solo Caracteres Alfabéticos',
-            'name.max'                  =>  'El Nombre debe tener una longitud máxima de 64 caracteres',
+            'name.between'              =>  'El Nombre debe debe contener entre 4 y 64 caracteres',
             'surname.required'          =>  'El Apellido es requerido',
             'surname.alpha'             =>  'El Apellido debe contener solo Caracteres Alfabéticos',
-            'surname.max'               =>  'El Apellido debe tener una longitud máxima de 64 caracteres',
+            'surname.between'           =>  'El Apellido debe contener entre 4 y 64 caracteres',
             'email.required'            =>  'El Correo Electrónico es requerido',
             'email.email'               =>  'El Correo Electrónico tiene un formato inválido',
             'email.max'                 =>  'El Correo Electrónico debe tener una longitud máxima de 255 caracteres',
             'email.unique'              =>  'El Correo Electrónico ya está siendo utilizado',
             'cellphone_number.required' =>  'El Teléfono Celular es requerido',
             'cellphone_number.string'   =>  'El Teléfono Celular tiene caracteres inválidos',
-            'cellphone_number.max'      =>  'El Teléfono Celular debe contener una longitud máxima de 32 caracteres',
+            'cellphone_number.between'  =>  'El Teléfono Celular debe contener entre 4 y 32 caracteres',
             'cellphone_number.unique'   =>  'El Teléfono Celular ya está siendo utilizado',
             'password.required'         =>  'La Contraseña es requerida',
             'password.string'           =>  'La Contraseña contiene caracteres inválidos',
@@ -207,6 +207,78 @@ class ClientController extends Controller
      */
     public function update(Request $request, $idPublicClient)
     {
+
+        $client = Client::where('id_public', $idPublicClient)->first();
+
+        if(!$client)
+            return response()->json(['errors'   =>  'El Cliente no existe'], 422);
+
+        $validator = Validator::make($request->all(),
+        [
+            'name'                  =>  'alpha|between:4,64',
+            'surname'               =>  'alpha|between:4,64',
+            'email'                 =>  'email|max:255',
+            'cellphone_number'      =>  'string|between:4,32',
+            'password'              =>  'string|max:255'
+        ],
+        [
+            'name.alpha'                =>  'El Nombre debe contener solo Caracteres Alfabéticos',
+            'name.between'              =>  'El Nombre debe contener entre 4 y 64 caracteres',
+            'surname.alpha'             =>  'El Apellido debe contener solo Caracteres Alfabéticos',
+            'surname.between'           =>  'El Apellido debe contener entre 4 y 64 caracteres',
+            'email.email'               =>  'El Correo Electrónico tiene un formato inválido',
+            'email.max'                 =>  'El Correo Electrónico debe tener una longitud máxima de 255 caracteres',
+            'cellphone_number.string'   =>  'El Teléfono Celular tiene caracteres inválidos',
+            'cellphone_number.between'  =>  'El Teléfono Celular debe contener entre 4 y 32 caracteres',
+            'password.string'           =>  'La Contraseña contiene caracteres inválidos',
+            'password.max'              =>  'La Contraseña debe contener una longitud máxima de 255 caracteres',
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors'   =>  $validator->errors()], 422);
+
+        if(Auth::user()->hasRole(['client']))
+        {
+            if($client->id != Auth::user()->client->id)
+                return response()->json(['errors'   =>  'Solo puede editar su perfil'], 422);
+        }
+
+        if($request->exists('name'))
+            $client->name = $request->name;
+
+        if($request->exists('surname'))
+            $client->surname = $request->surname;
+
+        if($request->exists('email'))
+        {
+            if(User::where('email', $request->email)->where('id', '!=', $client->user->id)->count() == 1)
+                return response()->json(['errors'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
+
+            if(User::where('email', $request->email)->count() == 0 && $client->user->email != $request->email)
+                $client->user->email = $request->email;
+
+            $token = Str::random(24);
+            $client->user->observation_flag_login = 'Email sin verificar - ' . $token;
+        }
+
+        if($request->exists('cellphone_number'))
+        {
+            $request->cellphone_number = '+'. $request->cellphone_number;
+
+            if(User::where('cellphone_number', $request->cellphone_number)->where('id', '!=', $client->user->id)->count() == 1)
+                return response()->json(['errors'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
+
+            if(User::where('cellphone_number', $request->cellphone_number)->count() == 0  && $client->user->cellphone_number != $request->cellphone_number)
+                $client->user->cellphone_number = $request->cellphone_number;
+        }
+
+        if($request->exists('password'))
+            $client->user->password = bcrypt($request->password);
+
+        if($client->save() && $client->user->save())
+            return response()->json(['status' => 'success'], 200);
+
+        return response()->json(['errors'   =>  'No se pudo acualizar al Cliente'], 422);
 
     }
 
