@@ -104,7 +104,7 @@ class ClientController extends Controller
             'surname'               =>  'required|alpha|between:4,64',
             'email'                 =>  'required|email|max:255|unique:users',
             'cellphone_number'      =>  'required|string|between:4,32|unique:users',
-            'password'              =>  'required|string|max:255'
+            'password'              =>  'required|string|min:8|max:255'
         ],
         [
             'name.required'             =>  'El Nombre es requerido',
@@ -123,6 +123,7 @@ class ClientController extends Controller
             'cellphone_number.unique'   =>  'El Teléfono Celular ya está siendo utilizado',
             'password.required'         =>  'La Contraseña es requerida',
             'password.string'           =>  'La Contraseña contiene caracteres inválidos',
+            'password.min'              =>  'La Contraseña debe contener una longitud mínima de 8 caracteres',
             'password.max'              =>  'La Contraseña debe contener una longitud máxima de 255 caracteres',
         ]);
 
@@ -219,7 +220,7 @@ class ClientController extends Controller
             'surname'               =>  'alpha|between:4,64',
             'email'                 =>  'email|max:255',
             'cellphone_number'      =>  'string|between:4,32',
-            'password'              =>  'string|max:255'
+            'password'              =>  'string|min:8|max:255'
         ],
         [
             'name.alpha'                =>  'El Nombre debe contener solo Caracteres Alfabéticos',
@@ -231,6 +232,7 @@ class ClientController extends Controller
             'cellphone_number.string'   =>  'El Teléfono Celular tiene caracteres inválidos',
             'cellphone_number.between'  =>  'El Teléfono Celular debe contener entre 4 y 32 caracteres',
             'password.string'           =>  'La Contraseña contiene caracteres inválidos',
+            'password.min'              =>  'La Contraseña debe contener una longitud mínima de 8 caracteres',
             'password.max'              =>  'La Contraseña debe contener una longitud máxima de 255 caracteres',
         ]);
 

@@ -17,7 +17,7 @@ class ResetPasswordController extends Controller
         [
             'email'     =>  'required|email|exists:users',
             'token'     =>  'required|digits:6',
-            'password'  =>  'required|string|max:255'
+            'password'  =>  'required|string|min:8|max:255'
         ],
         [
             'email.required'        =>  'El Correo Electrónico es requerido',
@@ -27,6 +27,7 @@ class ResetPasswordController extends Controller
             'token.digits'          =>  'El Código debe se un número de 6 dígitos',
             'password.required'     =>  'La Contraseña es requerida',
             'password.string'       =>  'La Contraseña contiene caracteres inválidos',
+            'password.min'          =>  'La Contraseña debe contener una longitud mínima de 8 caracteres',
             'password.max'          =>  'La Contraseña debe contener una longitud máxima de 255 caracteres',
         ]);
 
