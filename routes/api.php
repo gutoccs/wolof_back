@@ -6,16 +6,18 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
 
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
-    //Route::post('forgot-password', 'ForgotPasswordController');
-    //Route::post('reset-password', 'ResetPasswordController@reset');
+    Route::post('forgot-password', ForgotPasswordController::class);
+    //Route::put('reset-password', [ResetPasswordController::class, 'reset']);
     Route::get('refresh', [AuthController::class, 'refresh']);
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('user', [AuthController::class, 'user']);
