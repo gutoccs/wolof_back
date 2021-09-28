@@ -17,7 +17,7 @@ use App\Http\Controllers\UserController;
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('forgot-password', ForgotPasswordController::class);
-    //Route::put('reset-password', [ResetPasswordController::class, 'reset']);
+    Route::put('reset-password', [ResetPasswordController::class, 'reset']);
     Route::get('refresh', [AuthController::class, 'refresh']);
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('user', [AuthController::class, 'user']);
