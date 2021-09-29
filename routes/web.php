@@ -14,4 +14,10 @@ use App\Http\Controllers\ProblemController;
 |
 */
 
-Route::get('/{any}', ProblemController::class)->where('any', '.*');
+Route::get('/', function(){
+    return view('index');
+});
+
+Route::get('/{any}', function() {
+    return view('problem');
+})->where('any', '.*');
