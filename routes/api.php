@@ -12,6 +12,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ValidateAccountController;
 
 
 Route::prefix('auth')->group(function () {
@@ -36,6 +37,8 @@ Route::group([
 
     Route::post('/update-profile-image', [UserController::class, 'updateProfileImage']);
     Route::delete('/remove-profile-image', [UserController::class, 'removeProfileImage']);
+    Route::post('/start-validation', [ValidateAccountController::class, 'startValidation']);
+    Route::put('/check-validation', [ValidateAccountController::class, 'checkValidation']);
 
     Route::group(['middleware' => 'checkTypeOfUser:employee'], function () {
         Route::get('/', [UserController::class, 'index']);

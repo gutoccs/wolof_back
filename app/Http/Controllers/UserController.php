@@ -70,7 +70,7 @@ class UserController extends Controller
         }
 
 
-        $users = $users->select('users.id as id_user', 'users.email as email_user', 'users.username as username_user', 'users.cellphone_number as cellphone_number_user',  'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
+        $users = $users->select('users.id as id', 'users.email as email', 'users.username as username', 'users.cellphone_number as cellphone_number',  'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login', 'users.observation_flag_login as observation_flag_login', 'users.validated_email as validated_email', 'users.validated_mobile_number as validated_mobile_number','users.created_at as created_at', 'users.updated_at as updated_at')
                         ->get();
 
         return response()->json(
@@ -96,7 +96,7 @@ class UserController extends Controller
         $user = User::leftJoin('role_user', 'users.id', '=', 'role_user.user_id')
                         ->leftJoin('roles', 'role_user.role_id', '=', 'roles.id')
                         ->where('users.id', $idUser)
-                        ->select('users.id as id_user', 'users.email as email_user',  'users.username as username_user', 'users.cellphone_number as cellphone_number_user',  'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.created_at as created_at_user', 'users.updated_at as updated_at_user')
+                        ->select('users.id as id', 'users.email as email',  'users.username as username', 'users.cellphone_number as cellphone_number',  'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.flag_login as flag_login', 'users.observation_flag_login as observation_flag_login', 'users.validated_email as validated_email', 'users.validated_mobile_number as validated_mobile_number','users.created_at as created_at', 'users.updated_at as updated_at')
                         ->first();
 
         return response()->json([

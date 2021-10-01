@@ -29,7 +29,9 @@ class User extends Authenticatable implements JWTSubject
         'avatar_profile_image',
         'flag_login',
         'observation_flag_login',
-        'cellphone_number'
+        'cellphone_number',
+        'validated_email',
+        'validated_mobile_number',
     ];
 
     /**
@@ -91,4 +93,15 @@ class User extends Authenticatable implements JWTSubject
     public function merchant() {
         return $this->hasOne('App\Models\Merchant');
     }
+
+    /**
+     * Get all of the comments for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function validateAccounts()
+    {
+        return $this->hasMany('App\Models\ValidateAccount');
+    }
+
 }
