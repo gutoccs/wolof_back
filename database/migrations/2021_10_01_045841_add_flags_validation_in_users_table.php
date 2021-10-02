@@ -27,7 +27,7 @@ class AddFlagsValidationInUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['e,m', '']);
+            $table->dropColumn(['validated_mobile_number', 'validated_email']);
         });
     }
 }
