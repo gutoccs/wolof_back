@@ -21,7 +21,7 @@ Gabu App
 
     <tr>
         <td bgcolor="#ffffff" align="center" valign="top" style="padding: 5px 20px 5px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-            <h1 style="font-size: 24px; font-weight: 400; margin: 1;">¡Hola, {{ $fullNameClient }}!</h1>
+            <h1 style="font-size: 24px; font-weight: 400; margin: 1;">¡Hola, {{ $fullNameUser }}!</h1>
         </td>
     </tr>
 

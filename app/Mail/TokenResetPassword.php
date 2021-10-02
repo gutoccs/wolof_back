@@ -11,7 +11,7 @@ class TokenResetPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
-    protected $fullNameClient;
+    protected $fullNameUser;
     protected $token;
 
     /**
@@ -19,9 +19,9 @@ class TokenResetPassword extends Mailable
      *
      * @return void
      */
-    public function __construct($fullNameClient, $token)
+    public function __construct($fullNameUser, $token)
     {
-        $this->fullNameClient = $fullNameClient;
+        $this->fullNameUser = $fullNameUser;
         $this->token = $token;
     }
 
@@ -35,7 +35,7 @@ class TokenResetPassword extends Mailable
         return $this->view('emails.token_reset_password')
                     ->subject("Código para recuperar contraseña en Gabu App")
                     ->with([
-                        'fullNameClient'    =>  $this->fullNameClient,
+                        'fullNameUser'      =>  $this->fullNameUser,
                         'token'             =>  $this->token
                     ]);
     }

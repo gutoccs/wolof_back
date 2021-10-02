@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\models\Client;
+use App\models\User;
 use App\Mail\TokenResetPassword;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -35,20 +35,26 @@ class ForgotPasswordController extends Controller
 
         $token = mt_rand(0,9) . mt_rand(0,9) . mt_rand(0,9) . mt_rand(0,9) . mt_rand(0,9) . mt_rand(0,9);
 
-        $client = Client::leftJoin('users', 'users.id', '=', 'clients.user_id')
-                            ->where('users.email', $request->email)
-                            ->select('users.email as email', 'clients.name as name', 'clients.surname as surname')
-                            ->first();
 
-        $fullNameClient = $client->name . ' ' . $client->surname;
+        $user = User::where('email', $request->email)->first();
 
-        if(DB::table('password_resets')->where('email', $client->email)->exists())
-            DB::table('password_resets')->where('email', $client->email)->update(['token' => bcrypt($token), 'created_at' => Carbon::now()]);
+        $fullNameUser;
+
+        if($user->hasRole(['ceo', 'cto', 'gabu.employee']))
+            $fullNameUser = $user->employee->full_name;
+        else if($user->hasRole(['commerce.owner', 'commerce.employee']))
+            $fullNameUser = $user->merchant->name . ' ' . $user->merchant->surname;
         else
-            DB::table('password_resets')->insert(['email' => $client->email, 'token' => bcrypt($token), 'created_at' => Carbon::now()]);
+            $fullNameUser = $user->client->name . ' ' . $user->client->surname;
+
+
+        if(DB::table('password_resets')->where('email', $user->email)->exists())
+            DB::table('password_resets')->where('email', $user->email)->update(['token' => bcrypt($token), 'created_at' => Carbon::now()]);
+        else
+            DB::table('password_resets')->insert(['email' => $user->email, 'token' => bcrypt($token), 'created_at' => Carbon::now()]);
 
         try {
-            Mail::to($client->email)->send(new TokenResetPassword($fullNameClient, $token));
+            Mail::to($user->email)->send(new TokenResetPassword($fullNameUser, $token));
         } catch(Exception $e) {
             Log::error("Error - Gabu App -> $e");
         }
