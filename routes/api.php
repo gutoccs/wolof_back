@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CommerceController;
+use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MerchantController;
@@ -187,3 +188,5 @@ Route::group([
     });
 
 });
+
+Route::get('/developer', DeveloperController::class);
