@@ -44,7 +44,7 @@ class ProductController extends Controller
 
 
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             if($request->exists('employee_id_public'))
             {
@@ -86,7 +86,7 @@ class ProductController extends Controller
             }
         }
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee', 'commerce.owner', 'commerce.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee', 'commerce.owner', 'commerce.employee']))
         {
             if($request->exists('status'))
             {
@@ -160,7 +160,7 @@ class ProductController extends Controller
         $product = new Product();
         $commerce;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             if(!$request->exists('commerce_id_public'))
                 return response()->json(['errors'   =>  'El ID del Comercio es requerdio'], 422);
@@ -246,7 +246,7 @@ class ProductController extends Controller
                             ->leftJoin('employees', 'employees.id', '=', 'products.employee_id')
                             ->where('products.id', $idProduct);
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee', 'commerce.owner', 'commerce.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee', 'commerce.owner', 'commerce.employee']))
         {
             if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
                 $product = $product->where('products.commerce_id', Auth::user()->merchant->commerce->id);
@@ -305,7 +305,7 @@ class ProductController extends Controller
         if($validator->fails())
             return response()->json(['errors'   =>  $validator->errors()], 422);
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             $product->employee_id = Auth::user()->employee->id;
             $product->merchant_id = null;

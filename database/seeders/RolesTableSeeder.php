@@ -21,19 +21,19 @@ class RolesTableSeeder extends Seeder
             [
                 'name'        => 'CEO',
                 'slug'        => 'ceo',
-                'description' => 'Se refiere al Presidente de Wolof',
+                'description' => 'Se refiere al Presidente de Gabu',
                 'level'       => 10,
             ],
             [
                 'name'        => 'CTO',
                 'slug'        => 'cto',
-                'description' => 'Se refiere al Gerente de Tecnología de Wolof. Es lo más parecido a un súper usuario, esto porque pudiera ejecutar rutinas propias de tecnología',
+                'description' => 'Se refiere al Gerente de Tecnología de Gabu. Es lo más parecido a un súper usuario, esto porque pudiera ejecutar rutinas propias de tecnología',
                 'level'       => 10,
             ],
             [
-                'name'        => "Wolof's Employee",
-                'slug'        => 'wolof.employee',
-                'description' => 'Se refiere a cualquier Empleado de Wolof',
+                'name'        => "Gabu's Employee",
+                'slug'        => 'gabu.employee',
+                'description' => 'Se refiere a cualquier Empleado de Gabu',
                 'level'       => 7,
             ],
             [
@@ -51,13 +51,13 @@ class RolesTableSeeder extends Seeder
             [
                 'name'        => 'Client',
                 'slug'        => 'client',
-                'description' => 'Son los Clientes de Wolof',
+                'description' => 'Son los Clientes de Gabu',
                 'level'       => 3,
             ],
             [
                 'name'        => 'Unverified',
                 'slug'        => 'unverified',
-                'description' => 'Son aquellos visitantes de Wolof, por ende estos no tienen un rol en específico asociado',
+                'description' => 'Son aquellos visitantes de Gabu, por ende estos no tienen un rol en específico asociado',
                 'level'       => 0,
             ],
         ];

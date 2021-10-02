@@ -17,7 +17,7 @@ class EmployeesTableSeeder extends Seeder
     {
         Employee::create([
             'user_id'           =>  1,
-            'full_name'         =>  'System Wolof',
+            'full_name'         =>  'System Gabu',
             'id_public'         =>  Str::random(24)
         ]);
 
@@ -35,7 +35,7 @@ class EmployeesTableSeeder extends Seeder
 
         Employee::create([
             'user_id'           =>  4,
-            'full_name'         =>  'Empleado Wolof',
+            'full_name'         =>  'Empleado Gabu',
             'id_public'         =>   Str::random(24)
         ]);
     }

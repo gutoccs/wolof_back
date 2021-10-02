@@ -247,7 +247,7 @@ class PurchaseController extends Controller
         $purchase->reason_for_cancellation = $request->reason_for_cancellation;
         $purchase->cancelled_at = Carbon::now();
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             $purchase->who_canceled = 'employee';
             $purchase->employee_id = Auth::user()->employee->id;
@@ -319,7 +319,7 @@ class PurchaseController extends Controller
         if($purchase->status == 'completed')
             return response()->json(['errors'   =>  'Esta Compra ya fue Completada'], 422);
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             $purchase->commerce_completed = $request->flag_completed;
             $purchase->employee_id = Auth::user()->employee->id;

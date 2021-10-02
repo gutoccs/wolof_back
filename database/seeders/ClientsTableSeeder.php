@@ -19,14 +19,14 @@ class ClientsTableSeeder extends Seeder
         Client::create([
             'user_id'           =>  7,
             'name'              =>  'Primer Cliente',
-            'surname'           =>  'Wolof',
+            'surname'           =>  'Gabu',
             'id_public'         =>  Str::random(24)
         ]);
 
         Client::create([
             'user_id'           =>  8,
             'name'              =>  'Segundo Cliente',
-            'surname'           =>  'Wolof',
+            'surname'           =>  'Gabu',
             'id_public'         =>  Str::random(24)
         ]);
 

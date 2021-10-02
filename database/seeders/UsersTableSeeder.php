@@ -17,7 +17,7 @@ class UsersTableSeeder extends Seeder
 
         $ceoRole = config('roles.models.role')::where('slug', '=', 'ceo')->first();
         $ctoRole = config('roles.models.role')::where('slug', '=', 'cto')->first();
-        $wolofEmployeeRole = config('roles.models.role')::where('slug', '=', 'wolof.employee')->first();
+        $gabuEmployeeRole = config('roles.models.role')::where('slug', '=', 'gabu.employee')->first();
 
         $commerceOwnerRole = config('roles.models.role')::where('slug', '=', 'commerce.owner')->first();
         $commerceEmployeeRole = config('roles.models.role')::where('slug', '=', 'commerce.employee')->first();
@@ -34,26 +34,26 @@ class UsersTableSeeder extends Seeder
          */
 
         // System
-        if (config('roles.models.defaultUser')::where('email', '=', 'system@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'system@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'system@wolof.com',
+                'email'         => 'system@gabu.com',
                 'password'      =>  bcrypt(Str::random(18)),
                 'flag_login'    =>  false,
                 'observation_flag_login'    =>  'El sistema no necesita autenticarse',
-                'username'      =>  'wolof',
+                'username'      =>  'gabu',
                 'cellphone_number'  =>  '+503123456781'
             ]);
 
-            $newUser->attachRole($wolofEmployeeRole);
+            $newUser->attachRole($gabuEmployeeRole);
             foreach ($permissions as $permission) {
                 $newUser->attachPermission($permission);
             }
         }
 
         // CEO
-        if (config('roles.models.defaultUser')::where('email', '=', 'jazmine@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'jazmine@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'jazmine@wolof.com',
+                'email'         => 'jazmine@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -68,9 +68,9 @@ class UsersTableSeeder extends Seeder
         }
 
         // CTO
-        if (config('roles.models.defaultUser')::where('email', '=', 'gustavo@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'gustavo@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'gustavo@wolof.com',
+                'email'         => 'gustavo@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -84,10 +84,10 @@ class UsersTableSeeder extends Seeder
             }
         }
 
-        // Wolof's Employee
-        if (config('roles.models.defaultUser')::where('email', '=', 'employee@wolof.com')->first() === null) {
+        // Gabu's Employee
+        if (config('roles.models.defaultUser')::where('email', '=', 'employee@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'employee@wolof.com',
+                'email'         => 'employee@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -95,13 +95,13 @@ class UsersTableSeeder extends Seeder
                 'cellphone_number'  =>  '+503123456784'
             ]);
 
-            $newUser->attachRole($wolofEmployeeRole);
+            $newUser->attachRole($gabuEmployeeRole);
         }
 
         // First Commerce Owner
-        if (config('roles.models.defaultUser')::where('email', '=', 'commerceowner@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'commerceowner@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'commerceowner@wolof.com',
+                'email'         => 'commerceowner@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -113,9 +113,9 @@ class UsersTableSeeder extends Seeder
         }
 
         // First Commerce Employee
-        if (config('roles.models.defaultUser')::where('email', '=', 'commerceemployee@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'commerceemployee@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'commerceemployee@wolof.com',
+                'email'         => 'commerceemployee@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -127,9 +127,9 @@ class UsersTableSeeder extends Seeder
         }
 
         // Client 1
-        if (config('roles.models.defaultUser')::where('email', '=', 'client1@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'client1@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'client1@wolof.com',
+                'email'         => 'client1@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -141,9 +141,9 @@ class UsersTableSeeder extends Seeder
         }
 
         // Client 2
-        if (config('roles.models.defaultUser')::where('email', '=', 'client2@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'client2@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'client2@wolof.com',
+                'email'         => 'client2@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -155,9 +155,9 @@ class UsersTableSeeder extends Seeder
         }
 
         // Second Commerce Owner
-        if (config('roles.models.defaultUser')::where('email', '=', 'commerceowner2@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'commerceowner2@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'commerceowner2@wolof.com',
+                'email'         => 'commerceowner2@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
@@ -169,9 +169,9 @@ class UsersTableSeeder extends Seeder
         }
 
         // Second Commerce Employee
-        if (config('roles.models.defaultUser')::where('email', '=', 'commerceemployee2@wolof.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'commerceemployee2@gabu.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'commerceemployee2@wolof.com',
+                'email'         => 'commerceemployee2@gabu.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,

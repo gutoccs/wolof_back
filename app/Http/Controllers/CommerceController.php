@@ -25,7 +25,7 @@ class CommerceController extends Controller
 
         $commerces;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
             $commerces =  Commerce::select('commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.legal_name as legal_name_commerce', 'commerces.tax_identification_number as tax_identification_number_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.flag_active as flag_active_commerce', 'commerces.observation_flag_active as observation_flag_active_commerce', 'commerces.created_at as created_at_commerce', 'commerces.address as address_commerce');
 
 
@@ -171,7 +171,7 @@ class CommerceController extends Controller
             return response()->json(['errors'   =>  'El Comercio no existe'], 422);
 
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
             $commerce =  Commerce::select('commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.legal_name as legal_name_commerce', 'commerces.tax_identification_number as tax_identification_number_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.flag_active as flag_active_commerce', 'commerces.observation_flag_active as observation_flag_active_commerce', 'commerces.created_at as created_at_commerce', 'commerces.address as address_commerce');
 
 
@@ -362,7 +362,7 @@ class CommerceController extends Controller
 
         $commerceId;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
 
             $validator = Validator::make($request->all(),
@@ -371,7 +371,7 @@ class CommerceController extends Controller
             ],
             [
                 'commerce_id.required'  =>  'El ID del Comercio es Requerido',
-                'commerce_id.exists'    =>  'El Comercio no existe en Wolof',
+                'commerce_id.exists'    =>  'El Comercio no existe',
             ]);
 
             if($validator->fails())
@@ -422,7 +422,7 @@ class CommerceController extends Controller
     {
         $commerceId;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             $validator = Validator::make($request->all(),
             [
@@ -430,7 +430,7 @@ class CommerceController extends Controller
             ],
             [
                 'commerce_id.required'  =>  'El ID del Comercio es Requerido',
-                'commerce_id.exists'    =>  'El Comercio no existe en Wolof',
+                'commerce_id.exists'    =>  'El Comercio no existe',
             ]);
 
             if($validator->fails())

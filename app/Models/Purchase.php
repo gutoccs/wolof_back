@@ -52,7 +52,7 @@ class Purchase extends Model
         return $this->belongsTo('App\Models\Merchant');
     }
 
-    // Empleado Wolof que canceló la compra (Solo si aplica)
+    // Empleado Gabu que canceló la compra (Solo si aplica)
     public function employee()
     {
         return $this->belongsTo('App\Models\Employee');

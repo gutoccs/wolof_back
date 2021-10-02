@@ -176,7 +176,7 @@ class UserController extends Controller
             $user->observation_flag_login = null;
         }
 
-        if($user->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if($user->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             if(Auth::user()->hasRole(['ceo', 'cto']))
             {
@@ -216,14 +216,14 @@ class UserController extends Controller
 
         $userId;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             $validator = Validator::make($request->all(),
             [
                 'user_id'           =>  'exists:users,id'
             ],
             [
-                'user_id.exists'    =>  'El usuario no existe en Wolof',
+                'user_id.exists'    =>  'El usuario no existe',
             ]);
 
             if($validator->fails())
@@ -278,14 +278,14 @@ class UserController extends Controller
     {
         $userId;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             $validator = Validator::make($request->all(),
             [
                 'user_id'           =>  'exists:users,id'
             ],
             [
-                'user_id.exists'    =>  'El usuario no existe en Wolof',
+                'user_id.exists'    =>  'El usuario no existe',
             ]);
 
             if($validator->fails())

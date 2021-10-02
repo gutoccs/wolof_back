@@ -204,7 +204,7 @@ class MerchantController extends Controller
                             ->whereIn('roles.slug', ['commerce.owner', 'commerce.employee'])
                             ->where('merchants.id_public', $idPublicMerchant);
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
             $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.validated_email as validated_email_user', 'users.validated_mobile_number as validated_mobile_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
         else
             $merchant = $merchant->select('users.id as id_user', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'roles.name as name_role', 'users.email as email_user', 'users.username as username_user', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'users.cellphone_number as cellphone_number_user', 'users.validated_email as validated_email_user', 'users.validated_mobile_number as validated_mobile_number_user', 'merchants.created_at as created_at_merchant', 'merchants.updated_at as updated_at_merchant');
@@ -308,7 +308,7 @@ class MerchantController extends Controller
         if($request->exists('surname'))
             $merchant->surname = $request->surname;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             if($request->exists('commerce_id'))
             {

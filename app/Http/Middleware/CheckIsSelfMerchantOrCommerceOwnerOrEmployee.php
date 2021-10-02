@@ -23,7 +23,7 @@ class CheckIsSelfMerchantOrCommerceOwnerOrEmployee
                 return $next($request);
         }
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee', 'commerce.owner']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee', 'commerce.owner']))
             return $next($request);
 
         return response()->json(['error' => 'Unauthorized - No tiene permiso'], 403);

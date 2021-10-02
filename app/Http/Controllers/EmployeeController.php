@@ -24,7 +24,7 @@ class EmployeeController extends Controller
         $employees = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
                         ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                         ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                        ->whereIn('roles.slug', ['ceo', 'cto', 'wolof.employee']);
+                        ->whereIn('roles.slug', ['ceo', 'cto', 'gabu.employee']);
 
 
         if($request->exists('id_user'))
@@ -126,7 +126,7 @@ class EmployeeController extends Controller
             'role_id.required'                  =>  'El ID del Rol es requerido',
             'role_id.numeric'                   =>  'El ID del Rol debe ser numérico',
             'role_id.exists'                    =>  'El Rol No Existe en la BD',
-            'role_id.in'                        =>  'El Rol No es válido para un empleado de Wolof'
+            'role_id.in'                        =>  'El Rol No es válido para un empleado de Gabu'
         ]);
 
         if($validator->fails())
@@ -177,10 +177,10 @@ class EmployeeController extends Controller
         $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
                             ->leftJoin('roles', 'roles.id', '=', 'role_user.role_id')
-                            ->whereIn('roles.slug', ['ceo', 'cto', 'wolof.employee'])
+                            ->whereIn('roles.slug', ['ceo', 'cto', 'gabu.employee'])
                             ->where('employees.id_public', $idPublicEmployee);
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
             $employee = $employee->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'role_user.role_id as id_role', 'roles.name as name_role', 'roles.slug as slug_role', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'users.flag_login as flag_login_user', 'users.observation_flag_login as observation_flag_login_user', 'users.validated_email as validated_email_user', 'users.validated_mobile_number as validated_mobile_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee');
         else
             $employee = $employee->select('users.id as id_user', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'roles.name as name_role', 'users.email as email_user', 'users.username as username_user', 'employees.full_name as full_name_employee', 'users.cellphone_number as cellphone_number_user', 'users.validated_email as validated_email_user', 'users.validated_mobile_number as validated_mobile_number_user', 'employees.created_at as created_at_employee', 'employees.updated_at as updated_at_employee');
@@ -308,7 +308,7 @@ class EmployeeController extends Controller
             'role_id.required'          =>  'El ID del Rol es requerido',
             'role_id.numeric'           =>  'El ID del Rol debe ser numérico',
             'role_id.exists'            =>  'El Rol No Existe en la BD',
-            'role_id.in'                =>  'El Rol No es válido para un empleado de Wolof'
+            'role_id.in'                =>  'El Rol No es válido para un empleado de Gabu'
         ]);
 
         if($validator->fails())

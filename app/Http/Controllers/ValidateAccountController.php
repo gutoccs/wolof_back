@@ -44,7 +44,7 @@ class ValidateAccountController extends Controller
 
         $fullNameUser;
 
-        if(Auth::user()->hasRole(['ceo', 'cto', 'wolof.employee']))
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
             $fullNameUser = Auth::user()->employee->full_name;
         else if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
             $fullNameUser = Auth::user()->merchant->name . ' ' . Auth::user()->merchant->surname;
