@@ -11,6 +11,8 @@
 
         <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900" rel="stylesheet">
 
+        <link rel="icon" href="{{ asset('images/logos/g_of_gabu_512x512.png') }}" type="image/gif" sizes="512x512">
+
         <meta property="og:locale" content="es_SV" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Gabu App" />
