@@ -11,7 +11,7 @@
 
         <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700,800,900" rel="stylesheet">
 
-        <link rel="icon" href="{{ asset('images/logos/g_of_gabu_512x512.png') }}" type="image/gif" sizes="512x512">
+        <link rel="icon" href="{{ asset('images/logos/g_of_gabu_512x512.png') }}" type="image/png" sizes="512x512">
 
         <meta property="og:locale" content="es_SV" />
         <meta property="og:type" content="website" />
@@ -19,7 +19,7 @@
         <meta property="og:description" content="Gabu App facilita la compra de Productos y Servicios" />
         <meta property="og:url" content="https://server.gabu.app" />
         <meta property="og:site_name" content="Gabu App" />
-        <meta property="og:image" content="{{ asset('images/logos/gabu_multicolor_1684x899.png') }}" />
+        <meta property="og:image" content="{{ asset('images/logos/gabu_multicolor_1684x1684.jpg') }}" />
         <meta property="og:image:width" content="1684" />
         <meta property="og:image:height" content="899" />
         <meta name="twitter:card" content="summary_large_image" />
