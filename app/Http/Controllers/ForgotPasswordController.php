@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
+/*
+* Paso 1 para recuperar la contraseña
+* Solicitud de Código de Validación
+*/
+
 class ForgotPasswordController extends Controller
 {
     /**

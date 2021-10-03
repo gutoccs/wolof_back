@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CodeValidationController;
 use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\EmployeeController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\ValidateAccountController;
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
     Route::post('forgot-password', ForgotPasswordController::class);
+    Route::get('code-validation', CodeValidationController::class);
     Route::put('reset-password', [ResetPasswordController::class, 'reset']);
     Route::get('refresh', [AuthController::class, 'refresh']);
     Route::group(['middleware' => 'auth:api'], function(){
