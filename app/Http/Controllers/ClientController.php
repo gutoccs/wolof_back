@@ -162,7 +162,12 @@ class ClientController extends Controller
         $newRole = config('roles.models.role')::where('slug', '=', 'client')->first();
         $client->user->attachRole($newRole);
 
-        return response()->json(['status' => 'success'], 200);
+        $credentials = $request->only('email', 'password');
+        if ($token = $this->guard()->attempt($credentials)) {
+            return response()->json(['status' => 'success', 'token' => $token], 200)->header('Authorization', $token);
+        }
+
+        return response()->json(['status' => 'success', 'token' => 'null'], 200);
 
     }
 
@@ -301,5 +306,10 @@ class ClientController extends Controller
             $client->delete();
 
         return response()->json(['status' => 'success'], 200);
+    }
+
+    private function guard()
+    {
+        return Auth::guard();
     }
 }
