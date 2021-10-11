@@ -128,7 +128,7 @@ class UserController extends Controller
                 ], 200);
             }
 
-            return response()->json(['error' => 'No se pudo borrar al usuario'], 401);
+            return response()->json(['error' => 'No se pudo borrar al usuario'], 422);
         }
 
         return response()->json(['error' => 'El Usuario no existe'], 422);

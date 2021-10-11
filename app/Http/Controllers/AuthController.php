@@ -21,13 +21,13 @@ class AuthController extends Controller
                 if ($token = $this->guard()->attempt($credentials)) {
                     return response()->json(['status' => 'success'], 200)->header('Authorization', $token);
                 }
-                return response()->json(['error' => 'login_error'], 401);
+                return response()->json(['error' => 'login_error'], 422);
             }
             else {
-                return response()->json(['error' => 'login_error Usuario no tiene permiso de autenticarse'], 401);
+                return response()->json(['error' => 'login_error Usuario no tiene permiso de autenticarse'], 422);
             }
         }
-        else return response()->json(['error' => 'login_error Usuario no existe'], 401);
+        else return response()->json(['error' => 'login_error Usuario no existe'], 422);
     }
 
     public function logout()
@@ -70,7 +70,7 @@ class AuthController extends Controller
                 ->json(['status' => 'successs'], 200)
                 ->header('Authorization', $token);
         }
-        return response()->json(['error' => 'refresh_token_error'], 401);
+        return response()->json(['error' => 'refresh_token_error'], 422);
     }
 
     /**
