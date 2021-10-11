@@ -130,7 +130,7 @@ class ClientController extends Controller
             return response()->json(['errors'   =>  $validator->errors()], 422);
 
         if(isset(Auth::user()->client->id) || isset(Auth::user()->merchant->id))
-            return response()->json(['errors'   =>  'No tiene permiso para crear Clientes'], 422);
+            return response()->json(['error'   =>  'No tiene permiso para crear Clientes'], 422);
 
 
         $token = Str::random(24);
@@ -143,7 +143,7 @@ class ClientController extends Controller
         $user->observation_flag_login = 'Email sin verificar - ' . $token;
 
         if(!$user->save())
-            return response()->json(['errors' => 'No se pudo crear el Usuario del Cliente'], 422);
+            return response()->json(['error' => 'No se pudo crear el Usuario del Cliente'], 422);
 
         $client = new Client();
 
@@ -156,7 +156,7 @@ class ClientController extends Controller
         if(!$client->save())
         {
             $user->forceDelete();
-                return response()->json(['errors'   =>  'No se pudo crear al Cliente'], 422);
+                return response()->json(['error'   =>  'No se pudo crear al Cliente'], 422);
         }
 
         $newRole = config('roles.models.role')::where('slug', '=', 'client')->first();
@@ -175,7 +175,7 @@ class ClientController extends Controller
     public function show($idPublicClient)
     {
         if(Client::where('id_public', $idPublicClient)->count() == 0)
-            return response()->json(['errors'   =>  'El Cliente no existe'], 422);
+            return response()->json(['error'   =>  'El Cliente no existe'], 422);
 
         $client = Client::leftJoin('users', 'clients.user_id', '=', 'users.id')
                         ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
@@ -211,7 +211,7 @@ class ClientController extends Controller
         $client = Client::where('id_public', $idPublicClient)->first();
 
         if(!$client)
-            return response()->json(['errors'   =>  'El Cliente no existe'], 422);
+            return response()->json(['error'   =>  'El Cliente no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [
@@ -240,7 +240,7 @@ class ClientController extends Controller
         if(Auth::user()->hasRole(['client']))
         {
             if($client->id != Auth::user()->client->id)
-                return response()->json(['errors'   =>  'Solo puede editar su perfil'], 422);
+                return response()->json(['error'   =>  'Solo puede editar su perfil'], 422);
         }
 
         if($request->exists('name'))
@@ -252,7 +252,7 @@ class ClientController extends Controller
         if($request->exists('email'))
         {
             if(User::where('email', $request->email)->where('id', '!=', $client->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
 
             if(User::where('email', $request->email)->count() == 0 && $client->user->email != $request->email)
                 $client->user->email = $request->email;
@@ -266,7 +266,7 @@ class ClientController extends Controller
             $request->cellphone_number = '+'. $request->cellphone_number;
 
             if(User::where('cellphone_number', $request->cellphone_number)->where('id', '!=', $client->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
 
             if(User::where('cellphone_number', $request->cellphone_number)->count() == 0  && $client->user->cellphone_number != $request->cellphone_number)
                 $client->user->cellphone_number = $request->cellphone_number;
@@ -278,7 +278,7 @@ class ClientController extends Controller
         if($client->save() && $client->user->save())
             return response()->json(['status' => 'success'], 200);
 
-        return response()->json(['errors'   =>  'No se pudo acualizar al Cliente'], 422);
+        return response()->json(['error'   =>  'No se pudo acualizar al Cliente'], 422);
 
     }
 
@@ -295,7 +295,7 @@ class ClientController extends Controller
         Client::where('id_public', $idPublicClient)->first();
 
         if(!$client)
-            return response()->json(['errors'   =>  'El Cliente no existe'], 422);
+            return response()->json(['error'   =>  'El Cliente no existe'], 422);
 
         if($client->user->delete())
             $client->delete();

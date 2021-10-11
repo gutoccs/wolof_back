@@ -154,7 +154,7 @@ class MerchantController extends Controller
         $user->observation_flag_login = 'Email sin verificar - ' . $token;
 
         if(!$user->save())
-            return response()->json(['errors' => 'No se pudo crear el Usuario del Empleado'], 422);
+            return response()->json(['error' => 'No se pudo crear el Usuario del Empleado'], 422);
 
         $merchant = new Merchant();
         $merchant->user_id = $user->id;
@@ -169,7 +169,7 @@ class MerchantController extends Controller
         else
         {
             if(!$request->exists('commerce_id'))
-                return response()->json(['errors' => 'El ID del Comercio es requerido'], 422);
+                return response()->json(['error' => 'El ID del Comercio es requerido'], 422);
 
             $merchant->commerce_id = $request->commerce_id;
         }
@@ -177,7 +177,7 @@ class MerchantController extends Controller
         if(!$merchant->save())
         {
             $user->forceDelete();
-            return response()->json(['errors'   =>  'No se pudo crear al comerciante'], 422);
+            return response()->json(['error'   =>  'No se pudo crear al comerciante'], 422);
         }
 
         $newRole = config('roles.models.role')::find($request->role_id);
@@ -195,7 +195,7 @@ class MerchantController extends Controller
     public function show($idPublicMerchant)
     {
         if(Merchant::where('id_public', $idPublicMerchant)->count() == 0)
-            return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+            return response()->json(['error'   =>  'El Comerciante no existe'], 422);
 
         $merchant = Merchant::leftJoin('users', 'merchants.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
@@ -236,12 +236,12 @@ class MerchantController extends Controller
         $merchant = Merchant::where('id_public', $idPublicMerchant)->first();
 
         if(!$merchant)
-            return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+            return response()->json(['error'   =>  'El Comerciante no existe'], 422);
 
         if(Auth::user()->hasRole('commerce.owner'))
         {
             if($merchant->commerce_id != Auth::user()->merchant->commerce_id)
-                return response()->json(['errors' => 'El Comerciante no pertenece a su Comercio'], 422);
+                return response()->json(['error' => 'El Comerciante no pertenece a su Comercio'], 422);
         }
 
         $validator = Validator::make($request->all(),
@@ -275,7 +275,7 @@ class MerchantController extends Controller
         if($request->exists('email'))
         {
             if(User::where('email', $request->email)->where('id', '!=', $merchant->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
 
             if(User::where('email', $request->email)->count() == 0 && $merchant->user->email != $request->email)
                 $merchant->user->email = $request->email;
@@ -287,7 +287,7 @@ class MerchantController extends Controller
         if($request->exists('username'))
         {
             if(User::where('username', $request->username)->where('id', '!=', $merchant->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Nombre de Usuario ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Nombre de Usuario ya está siendo utilizado'], 422);
 
             if(User::where('username', $request->username)->count() == 0  && $merchant->user->username != $request->username)
                 $merchant->user->username = strtolower($request->username);
@@ -296,7 +296,7 @@ class MerchantController extends Controller
         if($request->exists('cellphone_number'))
         {
             if(User::where('cellphone_number', $request->cellphone_number)->where('id', '!=', $merchant->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
 
             if(User::where('cellphone_number', $request->cellphone_number)->count() == 0  && $merchant->user->cellphone_number != $request->cellphone_number)
                 $merchant->user->cellphone_number = $request->cellphone_number;
@@ -319,7 +319,7 @@ class MerchantController extends Controller
         if($merchant->save() && $merchant->user->save())
             return response()->json(['status' => 'success'], 200);
 
-        return response()->json(['errors'   =>  'No se pudo acualizar al Comerciante'], 422);
+        return response()->json(['error'   =>  'No se pudo acualizar al Comerciante'], 422);
 
     }
 
@@ -336,12 +336,12 @@ class MerchantController extends Controller
         $merchant = Merchant::where('id_public', $idPublicMerchant)->first();
 
         if(!$merchant)
-            return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+            return response()->json(['error'   =>  'El Comerciante no existe'], 422);
 
         if(Auth::user()->hasRole('commerce.owner'))
         {
             if($merchant->commerce_id != Auth::user()->merchant->commerce_id)
-                return response()->json(['errors' => 'El Comerciante no pertenece a su Comercio'], 422);
+                return response()->json(['error' => 'El Comerciante no pertenece a su Comercio'], 422);
         }
 
         if($merchant->user->delete())
@@ -355,12 +355,12 @@ class MerchantController extends Controller
         $merchant = Merchant::where('id_public', $idPublicMerchant)->first();
 
         if(!$merchant)
-            return response()->json(['errors'   =>  'El Comerciante no existe'], 422);
+            return response()->json(['error'   =>  'El Comerciante no existe'], 422);
 
         if(Auth::user()->hasRole('commerce.owner'))
         {
             if($merchant->commerce_id != Auth::user()->merchant->commerce_id)
-                return response()->json(['errors' => 'El Comerciante no pertenece a su Comercio'], 422);
+                return response()->json(['error' => 'El Comerciante no pertenece a su Comercio'], 422);
         }
 
         $validator = Validator::make($request->all(),

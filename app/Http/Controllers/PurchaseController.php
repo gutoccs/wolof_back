@@ -107,13 +107,13 @@ class PurchaseController extends Controller
         $product = Product::find($request->product_id);
 
         if($product->status == 'suspended')
-            return response()->json(['errors'   =>  'El Producto está Suspendido'], 422);
+            return response()->json(['error'   =>  'El Producto está Suspendido'], 422);
 
         if($product->quantity_available < $request->amount)
-            return response()->json(['errors'   =>  'No hay disponibilidad de productos para esta Compra'], 422);
+            return response()->json(['error'   =>  'No hay disponibilidad de productos para esta Compra'], 422);
 
         if(Purchase::where('client_id', Auth::user()->client->id)->where('status', 'active')->count() == 2)
-            return response()->json(['errors'   =>  'Antes de volver a comprar debe completar sus dos compras activas'], 422);
+            return response()->json(['error'   =>  'Antes de volver a comprar debe completar sus dos compras activas'], 422);
 
         $purchase = new Purchase();
 
@@ -135,7 +135,7 @@ class PurchaseController extends Controller
             return response()->json(['status'    =>  'success'], 200);
         }
 
-        return response()->json(['errors' => 'No se pudo guardar la Compra'], 422);
+        return response()->json(['error' => 'No se pudo guardar la Compra'], 422);
     }
 
     /**
@@ -147,7 +147,7 @@ class PurchaseController extends Controller
     public function show($idPurchase)
     {
         if(Purchase::where('id', $idPurchase)->count() == 0)
-            return response()->json(['errors'   =>  'La Compra no existe'], 422);
+            return response()->json(['error'   =>  'La Compra no existe'], 422);
 
         $purchase = Purchase::leftJoin('products', 'products.id', '=', 'purchases.product_id')
                                 ->leftJoin('clients', 'clients.id', '=', 'purchases.client_id')
@@ -210,7 +210,7 @@ class PurchaseController extends Controller
         $purchase = Purchase::find($idPurchase);
 
         if(!$purchase)
-            return response()->json(['errors'   =>  'La Compra no existe'], 422);
+            return response()->json(['error'   =>  'La Compra no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [
@@ -227,20 +227,20 @@ class PurchaseController extends Controller
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
         {
             if(Auth::user()->merchant->commerce->id != $purchase->commerce_id)
-                return response()->json(['errors'   =>  'La Venta no pertenece a su Comercio'], 422);
+                return response()->json(['error'   =>  'La Venta no pertenece a su Comercio'], 422);
         }
 
         if(Auth::user()->hasRole(['client']))
         {
             if($purchase->client_id != Auth::user()->client->id)
-                return response()->json(['errors'   =>  'La Compra no le pertenece'], 422);
+                return response()->json(['error'   =>  'La Compra no le pertenece'], 422);
         }
 
         if($purchase->status == 'cancelled')
-            return response()->json(['errors'   =>  'Esta Compra ya fue Cancelada'], 422);
+            return response()->json(['error'   =>  'Esta Compra ya fue Cancelada'], 422);
 
         if($purchase->status == 'completed')
-            return response()->json(['errors'   =>  'Esta Compra ya fue Completada'], 422);
+            return response()->json(['error'   =>  'Esta Compra ya fue Completada'], 422);
 
 
         $purchase->status = 'cancelled';
@@ -275,7 +275,7 @@ class PurchaseController extends Controller
             return response()->json(['status'    =>  'success'], 200);
         }
 
-        return response()->json(['errors' => 'No se pudo actualizar la Compra'], 422);
+        return response()->json(['error' => 'No se pudo actualizar la Compra'], 422);
     }
 
     public function changeToCompleted(Request $request, $idPurchase)
@@ -287,7 +287,7 @@ class PurchaseController extends Controller
         $purchase = Purchase::find($idPurchase);
 
         if(!$purchase)
-            return response()->json(['errors'   =>  'La Compra no existe'], 422);
+            return response()->json(['error'   =>  'La Compra no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [
@@ -304,20 +304,20 @@ class PurchaseController extends Controller
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
         {
             if(Auth::user()->merchant->commerce->id != $purchase->commerce_id)
-                return response()->json(['errors'   =>  'La Venta no pertenece a su Comercio'], 422);
+                return response()->json(['error'   =>  'La Venta no pertenece a su Comercio'], 422);
         }
 
         if(Auth::user()->hasRole(['client']))
         {
             if($purchase->client_id != Auth::user()->client->id)
-                return response()->json(['errors'   =>  'La Compra no le pertenece'], 422);
+                return response()->json(['error'   =>  'La Compra no le pertenece'], 422);
         }
 
         if($purchase->status == 'cancelled')
-            return response()->json(['errors'   =>  'Esta Compra ya fue Cancelada'], 422);
+            return response()->json(['error'   =>  'Esta Compra ya fue Cancelada'], 422);
 
         if($purchase->status == 'completed')
-            return response()->json(['errors'   =>  'Esta Compra ya fue Completada'], 422);
+            return response()->json(['error'   =>  'Esta Compra ya fue Completada'], 422);
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
@@ -341,7 +341,7 @@ class PurchaseController extends Controller
         if($purchase->save())
             return response()->json(['status'    =>  'success'], 200);
 
-        return response()->json(['errors' => 'No se pudo actualizar la Compra'], 422);
+        return response()->json(['error' => 'No se pudo actualizar la Compra'], 422);
 
         //Puede usarlo el cliente o comerciante, y solo afectaría su flag relacionado
         // Verificar si los dos flags son true, si es así cambiar el status del mismo
@@ -354,7 +354,7 @@ class PurchaseController extends Controller
         $purchase = Purchase::find($idPurchase);
 
         if(!$purchase)
-            return response()->json(['errors'   =>  'La Compra no existe'], 422);
+            return response()->json(['error'   =>  'La Compra no existe'], 422);
 
         $purchase->status = 'active';
         $purchase->client_completed = false;
@@ -368,6 +368,6 @@ class PurchaseController extends Controller
         if($purchase->save())
             return response()->json(['status'    =>  'success'], 200);
 
-        return response()->json(['errors' => 'No se pudo limpiar la Compra'], 422);
+        return response()->json(['error' => 'No se pudo limpiar la Compra'], 422);
     }
 }

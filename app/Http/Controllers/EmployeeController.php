@@ -142,7 +142,7 @@ class EmployeeController extends Controller
         $user->observation_flag_login = 'Email sin verificar - ' . $token;
 
         if(!$user->save())
-            return response()->json(['errors' => 'No se pudo crear el Usuario del Empleado'], 422);
+            return response()->json(['error' => 'No se pudo crear el Usuario del Empleado'], 422);
 
         $employee = new Employee();
         $employee->user_id = $user->id;
@@ -153,7 +153,7 @@ class EmployeeController extends Controller
         if(!$employee->save())
         {
             $user->forceDelete();
-            return response()->json(['errors'   =>  'No se pudo crear al empleado'], 422);
+            return response()->json(['error'   =>  'No se pudo crear al empleado'], 422);
         }
 
         $newRole = config('roles.models.role')::find($request->role_id);
@@ -172,7 +172,7 @@ class EmployeeController extends Controller
     public function show($idPublicEmployee)
     {
         if(Employee::where('id_public', $idPublicEmployee)->count() == 0)
-            return response()->json(['errors'   =>  'El Empleado no existe'], 422);
+            return response()->json(['error'   =>  'El Empleado no existe'], 422);
 
         $employee = Employee::leftJoin('users', 'employees.user_id', '=', 'users.id')
                             ->leftJoin('role_user', 'role_user.user_id', '=', 'users.id')
@@ -208,7 +208,7 @@ class EmployeeController extends Controller
         $employee = Employee::where('id_public', $idPublicEmployee)->first();
 
         if(!$employee)
-            return response()->json(['errors'   =>  'El Empleado no existe'], 422);
+            return response()->json(['error'   =>  'El Empleado no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [
@@ -235,7 +235,7 @@ class EmployeeController extends Controller
         if($request->exists('email'))
         {
             if(User::where('email', $request->email)->where('id', '!=', $employee->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Correo Electrónico ya está siendo utilizado'], 422);
 
             if(User::where('email', $request->email)->count() == 0 && $employee->user->email != $request->email)
                 $employee->user->email = $request->email;
@@ -247,7 +247,7 @@ class EmployeeController extends Controller
         if($request->exists('username'))
         {
             if(User::where('username', $request->username)->where('id', '!=', $employee->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Nombre de Usuario ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Nombre de Usuario ya está siendo utilizado'], 422);
 
             if(User::where('username', $request->username)->count() == 0  && $employee->user->username != $request->username)
                 $employee->user->username = strtolower($request->username);
@@ -256,7 +256,7 @@ class EmployeeController extends Controller
         if($request->exists('cellphone_number'))
         {
             if(User::where('cellphone_number', $request->cellphone_number)->where('id', '!=', $employee->user->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
 
             if(User::where('cellphone_number', $request->cellphone_number)->count() == 0  && $employee->user->cellphone_number != $request->cellphone_number)
                 $employee->user->cellphone_number = $request->cellphone_number;
@@ -269,7 +269,7 @@ class EmployeeController extends Controller
         if($employee->save() && $employee->user->save())
             return response()->json(['status' => 'success'], 200);
 
-        return response()->json(['errors'   =>  'No se pudo acualizar al Empleado'], 422);
+        return response()->json(['error'   =>  'No se pudo acualizar al Empleado'], 422);
     }
 
     /**
@@ -285,7 +285,7 @@ class EmployeeController extends Controller
         $employee = Employee::where('id_public', $idPublicEmployee)->first();
 
         if(!$employee)
-            return response()->json(['errors'   =>  'El Empleado no existe'], 422);
+            return response()->json(['error'   =>  'El Empleado no existe'], 422);
 
         if($employee->user->delete())
             $employee->delete();
@@ -298,7 +298,7 @@ class EmployeeController extends Controller
         $employee = Employee::find('id_public', $idPublicEmployee)->first();
 
         if(!$employee)
-            return response()->json(['errors'   =>  'El Empleado no existe'], 422);
+            return response()->json(['error'   =>  'El Empleado no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [

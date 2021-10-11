@@ -145,7 +145,7 @@ class CommerceController extends Controller
             $commerce->address = $request->address;
 
         if(!$commerce->save())
-            return response()->json(['errors'   =>  'No se pudo guardar el Comercio'], 422);
+            return response()->json(['error'   =>  'No se pudo guardar el Comercio'], 422);
 
         $contact = new Contact();
 
@@ -156,7 +156,7 @@ class CommerceController extends Controller
 
         $commerce->forceDelete();
 
-        return response()->json(['errors'   =>  'No se pudo guardar el Contacto ni el Comercio'], 422);
+        return response()->json(['error'   =>  'No se pudo guardar el Contacto ni el Comercio'], 422);
     }
 
     /**
@@ -168,7 +168,7 @@ class CommerceController extends Controller
     public function show($idPublicCommerce)
     {
         if(Commerce::where('id_public', $idPublicCommerce)->count() == 0)
-            return response()->json(['errors'   =>  'El Comercio no existe'], 422);
+            return response()->json(['error'   =>  'El Comercio no existe'], 422);
 
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
@@ -207,12 +207,12 @@ class CommerceController extends Controller
         $commerce = Commerce::where('id_public', $idPublicCommerce)->first();
 
         if(!$commerce)
-            return response()->json(['errors'   =>  'El Comercio no existe'], 422);
+            return response()->json(['error'   =>  'El Comercio no existe'], 422);
 
         if(Auth::user()->hasRole('commerce.owner'))
         {
             if(Auth::user()->merchant->commerce_id != $commerce->id)
-                return response()->json(['errors'   =>  'El Comercio no le pertenece'], 422);
+                return response()->json(['error'   =>  'El Comercio no le pertenece'], 422);
         }
 
         $validator = Validator::make($request->all(),
@@ -239,7 +239,7 @@ class CommerceController extends Controller
         if($request->exists('trade_name'))
         {
             if(Commerce::where('trade_name', $request->trade_name)->where('id', '!=', $commerce->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Nombre Comercial ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Nombre Comercial ya está siendo utilizado'], 422);
 
             if(Commerce::where('trade_name', $request->trade_name)->count() == 0  && $commerce->trade_name != $request->trade_name)
                 $commerce->trade_name = $request->trade_name;
@@ -249,7 +249,7 @@ class CommerceController extends Controller
         if($request->exists('legal_name'))
         {
             if(Commerce::where('legal_name', $request->legal_name)->where('id', '!=', $commerce->id)->count() == 1)
-                return response()->json(['errors'   =>  'El Nombre Legal ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El Nombre Legal ya está siendo utilizado'], 422);
 
             if(Commerce::where('legal_name', $request->legal_name)->count() == 0  && $commerce->legal_name != $request->legal_name)
                 $commerce->legal_name = $request->legal_name;
@@ -259,7 +259,7 @@ class CommerceController extends Controller
         if($request->exists('tax_identification_number'))
         {
             if(Commerce::where('tax_identification_number', $request->tax_identification_number)->where('id', '!=', $commerce->id)->count() == 1)
-                return response()->json(['errors'   =>  'El NIT ya está siendo utilizado'], 422);
+                return response()->json(['error'   =>  'El NIT ya está siendo utilizado'], 422);
 
             if(Commerce::where('tax_identification_number', $request->tax_identification_number)->count() == 0  && $commerce->tax_identification_number != $request->tax_identification_number)
                 $commerce->tax_identification_number = $request->tax_identification_number;
@@ -278,7 +278,7 @@ class CommerceController extends Controller
         if($commerce->save())
             return response()->json(['status'   =>  'success'], 200);
 
-        return response()->json(['errors'   =>  'No se pudo actualizar el Comercio'], 422);
+        return response()->json(['error'   =>  'No se pudo actualizar el Comercio'], 422);
     }
 
     /**
@@ -297,7 +297,7 @@ class CommerceController extends Controller
         $commerce = Commerce::where('id_public', $idPublicCommerce)->first();
 
         if(!$commerce)
-            return response()->json(['errors'   =>  'El Comercio no existe'], 422);
+            return response()->json(['error'   =>  'El Comercio no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [
@@ -338,7 +338,7 @@ class CommerceController extends Controller
         if($commerce->save())
             return response()->json(['status'   =>  'success'], 200);
 
-        return response()->json(['errors'   =>  'No se pudo actualizar el Comercio'], 422);
+        return response()->json(['error'   =>  'No se pudo actualizar el Comercio'], 422);
     }
 
     public function updateProfileImage(Request $request)
@@ -461,7 +461,7 @@ class CommerceController extends Controller
     public function showContact($idPublicCommerce)
     {
         if(Commerce::where('id_public', $idPublicCommerce)->count() == 0)
-            return response()->json(['errors'   =>  'El Comercio no existe'], 422);
+            return response()->json(['error'   =>  'El Comercio no existe'], 422);
 
         $commerce = Commerce::where('id_public', $idPublicCommerce)->first();
 
@@ -481,12 +481,12 @@ class CommerceController extends Controller
         $commerce = Commerce::where('id_public', $idPublicCommerce)->first();
 
         if(!$commerce)
-            return response()->json(['errors'   =>  'El Comercio no existe'], 422);
+            return response()->json(['error'   =>  'El Comercio no existe'], 422);
 
         if(Auth::user()->hasRole('commerce.owner'))
         {
             if(Auth::user()->merchant->commerce_id != $commerce->id)
-                return response()->json(['errors'   =>  'El Comercio no le pertenece'], 422);
+                return response()->json(['error'   =>  'El Comercio no le pertenece'], 422);
         }
 
         $validator = Validator::make($request->all(),
@@ -570,7 +570,7 @@ class CommerceController extends Controller
         if($commerce->contact->save())
             return response()->json(['status' => 'success'], 200);
 
-        return response()->json(['errors'   => 'No se pudo actualizar el Contacto del Comercio']);
+        return response()->json(['error'   => 'No se pudo actualizar el Contacto del Comercio']);
 
     }
 

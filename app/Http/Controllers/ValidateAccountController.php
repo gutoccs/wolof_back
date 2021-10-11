@@ -30,13 +30,13 @@ class ValidateAccountController extends Controller
         if($request->type == 'email')
         {
             if(Auth::user()->validated_email)
-                return response()->json(['errors'   =>  'Su Correo Electrónico ya está validado'], 422);
+                return response()->json(['error'   =>  'Su Correo Electrónico ya está validado'], 422);
         }
 
         if($request->type == 'mobile_number')
         {
             if(Auth::user()->validated_mobile_number)
-                return response()->json(['errors'   =>  'Su Teléfono Celular ya está validado'], 422);
+                return response()->json(['error'   =>  'Su Teléfono Celular ya está validado'], 422);
         }
 
 

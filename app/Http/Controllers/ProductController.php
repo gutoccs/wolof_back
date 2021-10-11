@@ -163,7 +163,7 @@ class ProductController extends Controller
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             if(!$request->exists('commerce_id_public'))
-                return response()->json(['errors'   =>  'El ID del Comercio es requerdio'], 422);
+                return response()->json(['error'   =>  'El ID del Comercio es requerdio'], 422);
 
             $commerce = Commerce::where('id_public', $request->commerce_id_public)->first();
             $product->commerce_id = $commerce->id;
@@ -195,7 +195,7 @@ class ProductController extends Controller
         $product->price = $request->price;
 
         if(!$product->save())
-            return response()->json(['errors' => 'No se pudo guardar el Producto'], 422);
+            return response()->json(['error' => 'No se pudo guardar el Producto'], 422);
 
         $auxPath = "files/products/" . $commerce->id_public . "/" . $product->id;
         $path = public_path($auxPath);
@@ -227,7 +227,7 @@ class ProductController extends Controller
 
         File::deleteDirectory($path);
 
-        return response()->json(['errors' => 'No se pudo guardar el Producto'], 422);
+        return response()->json(['error' => 'No se pudo guardar el Producto'], 422);
     }
 
     /**
@@ -239,7 +239,7 @@ class ProductController extends Controller
     public function show($idProduct)
     {
         if(Product::where('id', $idProduct)->count() == 0)
-            return response()->json(['errors'   =>  'El Producto no existe'], 422);
+            return response()->json(['error'   =>  'El Producto no existe'], 422);
 
         $product = Product::leftJoin('merchants', 'merchants.id', '=', 'products.commerce_id')
                             ->leftJoin('commerces', 'commerces.id', '=', 'products.commerce_id')
@@ -282,7 +282,7 @@ class ProductController extends Controller
         $product = Product::find($idProduct);
 
         if(!$product)
-            return response()->json(['errors'   =>  'El Producto no existe'], 422);
+            return response()->json(['error'   =>  'El Producto no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [
@@ -313,7 +313,7 @@ class ProductController extends Controller
         else
         {
             if($product->commerce_id != Auth::user()->merchant->commerce->id)
-                return response()->json(['errors'   =>  'Usted no pertenece al Comercio'], 422);
+                return response()->json(['error'   =>  'Usted no pertenece al Comercio'], 422);
 
             $product->employee_id = null;
 
@@ -360,7 +360,7 @@ class ProductController extends Controller
         $product = Product::find($idProduct);
 
         if(!$product)
-            return response()->json(['errors'   =>  'El Producto no existe'], 422);
+            return response()->json(['error'   =>  'El Producto no existe'], 422);
 
         $validator = Validator::make($request->all(),
         [
@@ -384,7 +384,7 @@ class ProductController extends Controller
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
         {
             if($product->commerce_id != Auth::user()->merchant->commerce->id)
-                return response()->json(['errors'   =>  'Usted no pertenece al Comercio'], 422);
+                return response()->json(['error'   =>  'Usted no pertenece al Comercio'], 422);
         }
 
 
