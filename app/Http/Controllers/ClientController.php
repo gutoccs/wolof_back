@@ -164,7 +164,7 @@ class ClientController extends Controller
 
         $credentials = $request->only('email', 'password');
         if ($token = $this->guard()->attempt($credentials)) {
-            return response()->json(['status' => 'success', 'token' => 'null'], 200)->header('Authorization', $token);
+            return response()->json(['status' => 'success', 'token' => $token], 200)->header('Authorization', $token);
         }
 
         return response()->json(['status' => 'success', 'token' => 'null'], 200);
