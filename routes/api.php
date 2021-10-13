@@ -19,6 +19,7 @@ use App\Http\Controllers\ValidateAccountController;
 
 Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('login-cellphone-number', [AuthController::class, 'loginCellphoneNumber']);
     Route::post('forgot-password', ForgotPasswordController::class);
     Route::get('code-validation', CodeValidationController::class);
     Route::put('reset-password', [ResetPasswordController::class, 'reset']);

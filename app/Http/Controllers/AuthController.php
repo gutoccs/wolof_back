@@ -30,6 +30,43 @@ class AuthController extends Controller
         else return response()->json(['error' => 'login_error Usuario no existe'], 422);
     }
 
+    public function loginCellphoneNumber(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+        [
+            'cellphone_number'      =>  'string|between:4,32|exists:users,cellphone_number',
+            'password'              =>  'string|between:8,255'
+        ],
+        [
+            'cellphone_number.string'   =>  'El Teléfono Celular tiene caracteres inválidos',
+            'cellphone_number.between'  =>  'El Teléfono Celular debe contener entre 4 y 32 caracteres',
+            'cellphone_number.exists'   =>  'El Teléfono Celular y/o la contraseña no coinciden',
+            'password.string'           =>  'La Contraseña contiene caracteres inválidos',
+            'password.between'          =>  'La Contraseña debe contener entre 8 y 255 caracteres',
+        ]);
+
+        if($validator->fails())
+            return response()->json(['errors'   =>  $validator->errors()], 422);
+
+
+        if(User::where('cellphone_number', $request->cellphone_number)->count() > 0) {
+
+            $user = User::where('cellphone_number', $request->cellphone_number)->first();
+
+            if($user->flag_login == true) {
+                $credentials = ['email'   =>  $user->email, 'password' => $request->password];
+                if ($token = $this->guard()->attempt($credentials)) {
+                    return response()->json(['status' => 'success', 'token' => $token], 200)->header('Authorization', $token);
+                }
+                return response()->json(['error' => 'El Teléfono Celular y/o la contraseña no coinciden'], 422);
+            }
+            else {
+                return response()->json(['error' => 'Usuario no tiene permiso de autenticarse'], 422);
+            }
+        }
+        else return response()->json(['error' => 'Usuario no existe'], 422);
+    }
+
     public function logout()
     {
         $this->guard()->logout();
