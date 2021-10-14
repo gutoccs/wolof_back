@@ -377,8 +377,8 @@ class UserController extends Controller
 
         $user = $user->first();
 
-        $user['userTypeEs'] = $userTypeEs;
-        $user['userRoleEs'] = $userRoleEs;
+        $user['user_type_es'] = $userTypeEs;
+        $user['user_role_es'] = $userRoleEs;
 
 
         return response()->json([
