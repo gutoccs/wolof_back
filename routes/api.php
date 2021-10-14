@@ -39,6 +39,7 @@ Route::group([
     ],
 ], function() {
 
+    Route::get('/account-setting', [UserController::class, 'accountSetting']);
     Route::post('/update-profile-image', [UserController::class, 'updateProfileImage']);
     Route::delete('/remove-profile-image', [UserController::class, 'removeProfileImage']);
     Route::post('/start-validation', [ValidateAccountController::class, 'startValidation']);

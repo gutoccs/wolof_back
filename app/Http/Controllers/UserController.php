@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -315,6 +316,75 @@ class UserController extends Controller
         $user->save();
 
         return response()->json(['status' => 'success'], 200);
+    }
+
+    public function accountSetting() {
+
+        $userTypeEs;
+        $userRoleEs;
+
+        switch(Auth::user()->getRoles()[0]->slug) {
+            case 'ceo': $userTypeEs = 'Empleado';
+                        $userRoleEs = 'CEO';
+                        break;
+
+            case 'cto': $userTypeEs = 'Empleado';
+                        $userRoleEs = 'CTO';
+                        break;
+
+            case 'gabu.employee':   $userTypeEs = 'Empleado';
+                                    $userRoleEs = 'Empleado de Gabu';
+                                    break;
+
+            case 'commerce.owner':  $userTypeEs = 'Comerciante';
+                                    $userRoleEs = 'Dueño de Comercio';
+                                    break;
+
+            case 'commerce.employee':   $userTypeEs = 'Comerciante';
+                                        $userRoleEs = 'Empleado de Comercio';
+                                        break;
+
+            case 'client':  $userTypeEs = 'Cliente';
+                            $userRoleEs = 'Cliente';
+                            break;
+
+            default:    $userTypeEs = 'Sin verificar';
+                        $userRoleEs = 'Sin Verificar';
+        }
+
+        $user = User::where('users.id', Auth::user()->id);
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee'])) {
+
+            $user = $user->leftJoin('employees', 'employees.user_id', '=', 'users.id')
+                            ->select('users.id as id', 'employees.id as id_employee', 'users.email as email', 'users.cellphone_number as cellphone_number', 'employees.full_name as full_name', 'users.thumbnail_profile_image as thumbnail_profile_image', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as registration_date"));
+
+        }
+
+        if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee'])) {
+
+            $user = $user->leftJoin('merchants', 'merchants.user_id', '=', 'users.id')
+                            ->select('users.id as id', 'merchants.id as id_merchant', 'users.email as email', 'users.cellphone_number as cellphone_number', DB::raw('CONCAT(merchants.name, " ", merchants.surname) as full_name'), 'users.thumbnail_profile_image as thumbnail_profile_image', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as registration_date"));
+
+        }
+
+        if(Auth::user()->hasRole(['client'])) {
+
+            $user = $user->leftJoin('clients', 'clients.user_id', '=', 'users.id')
+                            ->select('users.id as id', 'clients.id as id_employee', 'users.email as email', 'users.cellphone_number as cellphone_number', DB::raw('CONCAT(clients.name, " ", clients.surname) as full_name'), 'users.thumbnail_profile_image as thumbnail_profile_image', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as registration_date"));
+
+        }
+
+        $user = $user->first();
+
+        $user['userTypeEs'] = $userTypeEs;
+        $user['userRoleEs'] = $userRoleEs;
+
+
+        return response()->json([
+            'status' => 'success',
+            'user'  =>  $user,
+        ], 200);
     }
 
 }
