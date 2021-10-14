@@ -39,11 +39,11 @@ Route::group([
     ],
 ], function() {
 
-    Route::get('/account-setting', [UserController::class, 'accountSetting']);
     Route::post('/update-profile-image', [UserController::class, 'updateProfileImage']);
     Route::delete('/remove-profile-image', [UserController::class, 'removeProfileImage']);
     Route::post('/start-validation', [ValidateAccountController::class, 'startValidation']);
     Route::put('/check-validation', [ValidateAccountController::class, 'checkValidation']);
+    Route::get('/account-setting', [UserController::class, 'accountSetting']);
 
     Route::group(['middleware' => 'checkTypeOfUser:employee'], function () {
         Route::get('/', [UserController::class, 'index']);
@@ -137,6 +137,7 @@ Route::group([
     Route::get('/', [CommerceController::class, 'index']);
     Route::get('/{idPublicCommerce}', [CommerceController::class, 'show'])->where('idPublicCommerce', '[A-Za-z0-9]+');
     Route::get('/{idPublicCommerce}/contact', [CommerceController::class, 'showContact'])->where('idPublicCommerce', '[A-Za-z0-9]+');
+    Route::get('/account-setting', [CommerceController::class, 'accountSetting']);
 
     Route::group(['middleware' => ['checkIsEmployeeOrCommerceOwner']], function () {
         Route::put('/{idPublicCommerce}', [CommerceController::class, 'update'])->where('idPublicCommerce', '[A-Za-z0-9]+');

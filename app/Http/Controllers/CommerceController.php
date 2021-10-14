@@ -6,6 +6,7 @@ use App\Models\Contact;
 use App\Models\Commerce;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
@@ -574,6 +575,21 @@ class CommerceController extends Controller
 
     }
 
+    public function accountSetting() {
+        if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee'])) {
+            $commerce = Commerce::leftJoin('contacts', 'contacts.commerce_id', '=', 'commerces.id')
+                                    ->where('commerces.id', Auth::user()->merchant->commerce_id)
+                                    ->select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.thumbnail_profile_image as thumbnail_image', 'commerces.tax_identification_number as tax_number', 'commerces.slogan as slogan', 'commerces.short_description as short_description', DB::raw("DATE_FORMAT(commerces.created_at, '%d-%m-%Y') as registration_date"), 'commerces.address as address', 'contacts.id as id_contact', 'contacts.whatsapp as whatsapp', 'contacts.web as web', 'contacts.phone_1 as phone_1', 'contacts.instagram as instagram', 'contacts.facebook as facebook')
+                                    ->first();
+
+            return response()->json([
+                'status'    => 'success',
+                'commerce'  =>  $commerce,
+            ], 200);
+        }
+
+        return response()->json(['error' => 'No es un Comerciante'], 422);
+    }
 
 }
 
