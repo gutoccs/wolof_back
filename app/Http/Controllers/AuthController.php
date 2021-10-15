@@ -55,11 +55,13 @@ class AuthController extends Controller
 
                     return response()->json(
                         [
-                            'status'    => 'success',
-                            'token'     =>  $token,
-                            'userRole'  =>  $user->getRoles()[0]->slug, // Posición 0 porque no se maneja Multi Roles
-                            'userType'  =>  $userType,
-                            'fullName'  =>  $fullName,
+                            'status'            => 'success',
+                            'token'             =>  $token,
+                            'userRole'          =>  $user->getRoles()[0]->slug, // Posición 0 porque no se maneja Multi Roles
+                            'userType'          =>  $userType,
+                            'fullName'          =>  $fullName,
+                            'avatarImage'       =>  ($user->avatar_profile_image) ? $user->avatar_profile_image : '',
+                            'thumbnailImage'    =>  ($user->thumbnail_profile_image) ? $user->thumbnail_profile_image : '',
                         ], 200)->header('Authorization', $token);
                 }
                 return response()->json(['error' => 'El Correo Electrónico y/o la Contraseña no coinciden'], 422);
@@ -116,11 +118,13 @@ class AuthController extends Controller
 
                     return response()->json(
                         [
-                            'status'    => 'success',
-                            'token'     =>  $token,
-                            'userRole'  =>  $user->getRoles()[0]->slug, // Posición 0 porque no se maneja Multi Roles
-                            'userType'  =>  $userType,
-                            'fullName'  =>  $fullName,
+                            'status'            => 'success',
+                            'token'             =>  $token,
+                            'userRole'          =>  $user->getRoles()[0]->slug, // Posición 0 porque no se maneja Multi Roles
+                            'userType'          =>  $userType,
+                            'fullName'          =>  $fullName,
+                            'avatarImage'       =>  ($user->avatar_profile_image) ? $user->avatar_profile_image : '',
+                            'thumbnailImage'    =>  ($user->thumbnail_profile_image) ? $user->thumbnail_profile_image : '',
                         ], 200)->header('Authorization', $token);
                 }
                 return response()->json(['error' => 'El Teléfono Celular y/o la Contraseña no coinciden'], 422);
