@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\models\User;
+use App\Models\User;
 use App\Mail\TokenResetPassword;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
