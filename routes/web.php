@@ -18,6 +18,14 @@ Route::get('/', function(){
     return view('index');
 });
 
+Route::get('/privacy-policies', function(){
+    return view('privacy_policies');
+});
+
+Route::get('/terms-and-conditions', function(){
+    return view('terms_and_conditions');
+});
+
 Route::get('/{any}', function() {
     return view('problem');
 })->where('any', '.*');
