@@ -51,14 +51,14 @@ class UsersTableSeeder extends Seeder
         }
 
         // CEO
-        if (config('roles.models.defaultUser')::where('email', '=', 'jazmine@gabu.com')->first() === null) {
+        if (config('roles.models.defaultUser')::where('email', '=', 'holatby@gmail.com')->first() === null) {
             $newUser = config('roles.models.defaultUser')::create([
-                'email'         => 'jazmine@gabu.com',
+                'email'         => 'holatby@gmail.com',
                 'password'      =>  bcrypt('password'),
                 'flag_login'    =>  true,
                 'observation_flag_login'    =>  null,
                 'username'      =>  'jazmine',
-                'cellphone_number'  =>  '+503123456782'
+                'cellphone_number'  =>  '+50374553997'
             ]);
 
             $newUser->attachRole($ceoRole);
