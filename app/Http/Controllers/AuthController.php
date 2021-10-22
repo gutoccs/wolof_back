@@ -101,25 +101,30 @@ class AuthController extends Controller
                 if ($token = $this->guard()->attempt($credentials)) {
                     $userType;
                     $fullName;
+                    $idPublic;
                     if($user->hasRole(['ceo', 'cto', 'gabu.employee'])) {
                         $userType = 'employee';
                         $fullName = $user->employee->full_name;
+                        $idPublic = $user->employee->id_public;
                     }
 
                     if($user->hasRole(['commerce.owner', 'commerce.employee'])) {
                         $userType = 'merchant';
                         $fullName = $user->merchant->name . ' ' . $user->merchant->surname;
+                        $idPublic = $user->merchant->id_public;
                     }
 
                     if($user->hasRole(['client'])) {
                         $userType = 'client';
                         $fullName = $user->client->name . ' ' . $user->client->surname;
+                        $idPublic = $user->client->id_public;
                     }
 
                     return response()->json(
                         [
                             'status'            => 'success',
                             'token'             =>  $token,
+                            'idPublic'          =>  $idPublic,
                             'userRole'          =>  $user->getRoles()[0]->slug, // Posición 0 porque no se maneja Multi Roles
                             'userType'          =>  $userType,
                             'fullName'          =>  $fullName,
