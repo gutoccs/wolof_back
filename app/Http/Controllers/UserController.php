@@ -364,14 +364,14 @@ class UserController extends Controller
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee'])) {
 
             $user = $user->leftJoin('merchants', 'merchants.user_id', '=', 'users.id')
-                            ->select('users.id as id', 'merchants.id_public as id_public', 'users.email as email', 'users.cellphone_number as cellphone_number', DB::raw('CONCAT(merchants.name, " ", merchants.surname) as full_name'), 'users.thumbnail_profile_image as thumbnail_profile_image', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as registration_date"));
+                            ->select('users.id as id', 'merchants.id_public as id_public', 'users.email as email', 'users.cellphone_number as cellphone_number', 'merchants.name as name', 'merchants.surname as surname', DB::raw('CONCAT(merchants.name, " ", merchants.surname) as full_name'), 'users.thumbnail_profile_image as thumbnail_profile_image', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as registration_date"));
 
         }
 
         if(Auth::user()->hasRole(['client'])) {
 
             $user = $user->leftJoin('clients', 'clients.user_id', '=', 'users.id')
-                            ->select('users.id as id', 'clients.id_public as id_public', 'users.email as email', 'users.cellphone_number as cellphone_number', DB::raw('CONCAT(clients.name, " ", clients.surname) as full_name'), 'users.thumbnail_profile_image as thumbnail_profile_image', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as registration_date"));
+                            ->select('users.id as id', 'clients.id_public as id_public', 'users.email as email', 'users.cellphone_number as cellphone_number', 'clients.name as name', 'clients.surname as surname', DB::raw('CONCAT(clients.name, " ", clients.surname) as full_name'), 'users.thumbnail_profile_image as thumbnail_profile_image', DB::raw("DATE_FORMAT(users.created_at, '%d-%m-%Y') as registration_date"));
 
         }
 
