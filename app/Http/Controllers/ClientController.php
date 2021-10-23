@@ -220,16 +220,16 @@ class ClientController extends Controller
 
         $validator = Validator::make($request->all(),
         [
-            'name'                  =>  'alpha|between:2,64',
-            'surname'               =>  'alpha|between:2,64',
+            'name'                  =>  'string|between:2,64',
+            'surname'               =>  'string|between:2,64',
             'email'                 =>  'email|max:255',
             'cellphone_number'      =>  'string|between:4,32',
             'password'              =>  'string|between:8,255'
         ],
         [
-            'name.alpha'                =>  'El Nombre debe contener solo Caracteres Alfabéticos',
+            'name.string'               =>  'El Nombre es inválido',
             'name.between'              =>  'El Nombre debe contener entre 4 y 64 caracteres',
-            'surname.alpha'             =>  'El Apellido debe contener solo Caracteres Alfabéticos',
+            'surname.string'            =>  'El Apellido es inválido',
             'surname.between'           =>  'El Apellido debe contener entre 4 y 64 caracteres',
             'email.email'               =>  'El Correo Electrónico tiene un formato inválido',
             'email.max'                 =>  'El Correo Electrónico debe tener una longitud máxima de 255 caracteres',
