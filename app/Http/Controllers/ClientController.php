@@ -268,8 +268,6 @@ class ClientController extends Controller
 
         if($request->exists('cellphone_number'))
         {
-            $request->cellphone_number = '+'. $request->cellphone_number;
-
             if(User::where('cellphone_number', $request->cellphone_number)->where('id', '!=', $client->user->id)->count() == 1)
                 return response()->json(['error'   =>  'El Teléfono Celular ya está siendo utilizado'], 422);
 
