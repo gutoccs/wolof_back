@@ -490,6 +490,7 @@ class CommerceController extends Controller
                 return response()->json(['error'   =>  'El Comercio no le pertenece'], 422);
         }
 
+        /* Aquí lo único es el unique de whatasapp
         $validator = Validator::make($request->all(),
         [
             'web'           =>  'url|max:128',
@@ -528,6 +529,36 @@ class CommerceController extends Controller
             'phone_2.string'        =>  'El Teléfono 2 tiene un formato inválido ',
             'phone_2.between'       =>  'La longitud del Teléfono 2 debe ser entre 4 y 32 caracteres',
             'email.email'           =>  'El Correo Electrónico tiene un formato inválido',
+            'email.max'             =>  'El Correo Electrónico debe tener una longitud máxina de 128 caracteres',
+        ]);*/
+
+        $validator = Validator::make($request->all(),
+        [
+            'web'           =>  'max:128',
+            'whatsapp'      =>  'max:32',
+            'instagram'     =>  'max:128',
+            'facebook'      =>  'max:128',
+            'twitter'       =>  'max:128',
+            'linkedin'      =>  'max:128',
+            'youtube'       =>  'max:128',
+            'tiktok'        =>  'max:128',
+            'phone_1'       =>  'max:32',
+            'phone_2'       =>  'max:32',
+            'email'         =>  'max:128',
+        ],
+        [
+
+
+            'web.max'               =>  'La Web debe tener una longitud máxina de 128 caracteres',
+            'whatsapp.max'          =>  'El Teléfono Celular (WhatsApp) debe tener una longitud máxina de 128 caracteres',
+            'instagram.max'         =>  'Instagram debe tener una longitud máxina de 128 caracteres',
+            'facebook.max'          =>  'Facebook debe tener una longitud máxina de 128 caracteres',
+            'twitter.max'           =>  'Twitter debe tener una longitud máxina de 128 caracteres',
+            'linkedin.max'          =>  'Linkedin debe tener una longitud máxina de 128 caracteres',
+            'youtube.max'           =>  'Youtube debe tener una longitud máxina de 128 caracteres',
+            'tiktok.max'            =>  'TikTok debe tener una longitud máxina de 128 caracteres',
+            'phone_1.max'           =>  'El Teléfono debe tener una longitud máxina de 32 caracteres',
+            'phone_2.max'           =>  'El Teléfono debe tener una longitud máxina de 32 caracteres',
             'email.max'             =>  'El Correo Electrónico debe tener una longitud máxina de 128 caracteres',
         ]);
 
