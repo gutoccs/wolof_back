@@ -41,7 +41,7 @@
 								<img src="{{ asset('images/logos/gabu_multicolor_1684x899.png') }}" alt="Logo Gabu App">
 							</div>
 							<h2>Gabu App</h2>
-							<p>Slogan</p>
+							<p>Experiencia Completa. Una fracción del costo.</p>
 						</div>
 					</section>
 
@@ -51,20 +51,24 @@
 					<section id="footer">
 						<div class="inner">
 							<h2 class="major">Contáctanos</h2>
-							<p>Aquí invitar a los comercios a escribir.</p>
+							<p>¡Permitimos que un comercio salve el mundo!</p>
+                            <p>Únete a GABU y hagamos una revolución del consumo responsable.</p>
 							<ul class="contact">
-								<li class="icon solid fa-home">
+								<li class="icon solid fa-envelope"><a href="mailto:hola@gabu.app?Subject=Contacto%20desde%20Gabu&Body=Hola,%20soy%20%0D%0A%0D%0AEstoy%20interesado%20en...%0D%0A%0D%0A%20" target="_blank"><span class="text-icon">hola@gabu.app</span></a></li>
+								<li class="icon brands fa-instagram"><a href="https://www.instagram.com/gabu.app" target="_blank"><span class="text-icon">@gabu.app</span></a></li>
+                                <li class="icon brands fa-facebook-f"><a href="https://www.facebook.com/Gabu-103000355519903" target="_blank"><span class="text-icon">Gabu App</span></a></li>
+							</ul>
+							<ul class="contact">
+								<!--
+                                <li class="icon solid fa-home">
 									<span class="text-icon">Untitled Inc<br />
 									1234 Somewhere Road Suite #2894<br />
 									Nashville, TN 00000-0000</span>
 								</li>
+
 								<li class="icon solid fa-phone"><span class="text-icon">(000) 000-0000</span></li>
-								<li class="icon solid fa-envelope"><a href="#"><span class="text-icon">information@untitled.tld</span></a></li>
-							</ul>
-							<ul class="contact">
-								<li class="icon brands fa-twitter"><a href="#"><span class="text-icon">twitter.com/untitled-tld</span></a></li>
-								<li class="icon brands fa-facebook-f"><a href="#"><span class="text-icon">facebook.com/untitled-tld</span></a></li>
-								<li class="icon brands fa-instagram"><a href="#"><span class="text-icon">instagram.com/untitled-tld</span></a></li>
+                                <li class="icon brands fa-twitter"><a href="#"><span class="text-icon">twitter.com/untitled-tld</span></a></li>
+                                -->
 							</ul>
 							<ul class="copyright">
 								<li>Gabu App | ©2021 Todos los derechos reservados</li>

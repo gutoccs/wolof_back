@@ -162,7 +162,7 @@
                     <tr>
                         <td bgcolor="#FFC843" align="center" style="padding: 30px 30px 30px 30px; border-radius: 4px 4px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
                             <h2 style="font-size: 20px; font-weight: 400; color: #111111; margin: 0;">¿Necesita más ayuda?</h2>
-                            <p style="margin: 0;">Escribir a <a href="mailto:hola@gabu.app" target="_blank" style="color: #DA3AB3;">hola@gabu.app</a></p>
+                            <p style="margin: 0;">Escribir a <a href="mailto:hola@gabu.app?Subject=Contacto%20desde%20Notificación%20Gabu&Body=Hola,%20soy%20%0D%0A%0D%0A%20" target="_blank" style="color: #DA3AB3;">hola@gabu.app</a></p>
                         </td>
                     </tr>
                 </table>
