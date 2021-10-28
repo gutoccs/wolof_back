@@ -14,7 +14,7 @@
         <meta property="og:locale" content="es_SV" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Gabu App" />
-        <meta property="og:description" content="Gabu App facilita la compra de Productos y Servicios" />
+        <meta property="og:description" content="Únete a GABU y hagamos una revolución del consumo responsable" />
         <meta property="og:url" content="https://server.gabu.app" />
         <meta property="og:site_name" content="Gabu App" />
         <meta property="og:image" content="{{ asset('images/logos/gabu_multicolor_1684x1684.jpg') }}" />
