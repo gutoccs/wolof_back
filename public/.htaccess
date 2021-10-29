@@ -3,6 +3,10 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    <IfModule mod_security.c>
+        SecFilterScanPOST Off
+    </IfModule>
+
     RewriteEngine On
 
     # Handle Authorization Header
