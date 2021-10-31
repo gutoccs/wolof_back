@@ -184,10 +184,9 @@ class ProductController extends Controller
             $product->description = $request->description;
 
 
-        if($request->exists('status')) {
-            $available = ($request->status == 'true') ? 'active' : 'suspended';
-            $product->status = $available;
-        }
+        if($request->exists('status'))
+            $product->status = $request->status;
+
 
         $product->quantity_available = $request->quantity_available;
 
@@ -328,10 +327,8 @@ class ProductController extends Controller
         if($request->exists('description'))
             $product->description = $request->description;
 
-        if($request->exists('status')) {
-            $available = ($request->status == 'true') ? 'active' : 'suspended';
-            $product->status = $available;
-        }
+        if($request->exists('status'))
+            $product->status = $request->status;
 
         if($request->exists('quantity_available'))
             $product->quantity_available = $request->quantity_available;
