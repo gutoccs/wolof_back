@@ -138,10 +138,10 @@ class ProductController extends Controller
         ],
         [
             'commerce_id_public.exists'     =>  'El Comercio no existe',
-            'title.required'                =>  'El Título es requerido',
-            'title.max'                     =>  'El Título no debe ser mayor a 64 caracteres',
+            'title.required'                =>  'El Nombre es requerido',
+            'title.max'                     =>  'El Nombre no debe ser mayor a 64 caracteres',
             'description.max'               =>  'La Descripción no debe ser mayor a 64 caracteres',
-            'status.in'                     =>  'Los valores de Estatus deben ser active o suspended',
+            'status.in'                     =>  'El valor de Producto Activo es erróneo',
             'quantity_available.required'   =>  'La Cantidad Disponible es requerida',
             'quantity_available.numeric'    =>  'La Cantidad Disponible debe ser numérico',
             'quantity_available.min'        =>  'La Cantidad Disponible debe ser mínimo 0',
@@ -184,8 +184,10 @@ class ProductController extends Controller
             $product->description = $request->description;
 
 
-        if($request->exists('status'))
-            $product->status = $request->status;
+        if($request->exists('status')) {
+            $available = ($request->status == 'true') ? 'active' : 'suspended';
+            $product->status = $available;
+        }
 
         $product->quantity_available = $request->quantity_available;
 
@@ -293,9 +295,9 @@ class ProductController extends Controller
             'price'                 =>  'numeric',
         ],
         [
-            'title.max'                     =>  'El Título no debe ser mayor a 64 caracteres',
+            'title.max'                     =>  'El Nombre no debe ser mayor a 64 caracteres',
             'description.max'               =>  'La Descripción no debe ser mayor a 64 caracteres',
-            'status.in'                     =>  'Los valores de Estatus deben ser active o suspended',
+            'status.in'                     =>  'El valor de Producto Activo es erróneo',
             'quantity_available.required'   =>  'La Cantidad Disponible es requerida',
             'quantity_available.numeric'    =>  'La Cantidad Disponible debe ser numérico',
             'quantity_available.min'        =>  'La Cantidad Disponible debe ser mínimo 0',
@@ -326,8 +328,10 @@ class ProductController extends Controller
         if($request->exists('description'))
             $product->description = $request->description;
 
-        if($request->exists('status'))
-            $product->status = $request->status;
+        if($request->exists('status')) {
+            $available = ($request->status == 'true') ? 'active' : 'suspended';
+            $product->status = $available;
+        }
 
         if($request->exists('quantity_available'))
             $product->quantity_available = $request->quantity_available;
