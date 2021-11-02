@@ -23,12 +23,12 @@ Route::prefix('auth')->group(function () {
     Route::post('forgot-password', ForgotPasswordController::class);
     Route::post('code-validation', CodeValidationController::class);
     Route::put('reset-password', [ResetPasswordController::class, 'reset']);
-    Route::get('refresh', [AuthController::class, 'refresh']);
     Route::group(['middleware' => 'auth:api'], function(){
         Route::get('user', [AuthController::class, 'user']);
         Route::post('logout', [AuthController::class, 'logout']);
         Route::get('me', [AuthController::class, 'me']);//->middleware('isLevelSevenOrMore');
         Route::get('payload', [AuthController::class, 'payload']);//->middleware('isLevelSevenOrMore');
+        Route::get('refresh', [AuthController::class, 'refresh']);
     });
 });
 
