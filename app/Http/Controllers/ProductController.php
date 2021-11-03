@@ -103,7 +103,8 @@ class ProductController extends Controller
         }
         else
         {
-            $products = $products->where('products.status', 'active');
+            $products = $products->where('products.status', 'active')
+                                    ->where('products.quantity_available', '>', 0);
 
             $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image')
                                 ->get();
@@ -257,7 +258,8 @@ class ProductController extends Controller
         }
         else
         {
-            $product = $product->where('products.status', 'active');
+            $product = $product->where('products.status', 'active')
+                                ->where('products.quantity_available', '>', 0);
             $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image')
                             ->first();
         }
