@@ -27,18 +27,18 @@ class CommerceController extends Controller
         $commerces;
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
-            $commerces =  Commerce::select('commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.legal_name as legal_name_commerce', 'commerces.tax_identification_number as tax_identification_number_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.flag_active as flag_active_commerce', 'commerces.observation_flag_active as observation_flag_active_commerce', 'commerces.created_at as created_at_commerce', 'commerces.address as address_commerce');
+            $commerces =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
 
 
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
-            $commerces =  Commerce::select('commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.legal_name as legal_name_commerce', 'commerces.tax_identification_number as tax_identification_number_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.created_at as created_at_commerce', 'commerces.address as address_commerce',);
+            $commerces =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address',);
 
         if(Auth::user()->hasRole('client'))
-            $commerces =  Commerce::select('commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.address as address_commerce',);
+            $commerces =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address_commerce',);
 
 
-        if($request->exists('id_commerce'))
-            $commerces =  $commerces->where('commerces.id', $request->id_commerce);
+        if($request->exists('id'))
+            $commerces =  $commerces->where('commerces.id', $request->id);
 
          if($request->exists('id_public'))
             $commerces =  $commerces->where('commerces.id_public', $request->id_public);
@@ -173,14 +173,14 @@ class CommerceController extends Controller
 
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
-            $commerce =  Commerce::select('commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.legal_name as legal_name_commerce', 'commerces.tax_identification_number as tax_identification_number_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.flag_active as flag_active_commerce', 'commerces.observation_flag_active as observation_flag_active_commerce', 'commerces.created_at as created_at_commerce', 'commerces.address as address_commerce');
+            $commerce =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
 
 
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
-            $commerce =  Commerce::select('commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.legal_name as legal_name_commerce', 'commerces.tax_identification_number as tax_identification_number_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.created_at as created_at_commerce', 'commerces.address as address_commerce',);
+            $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address',);
 
         if(Auth::user()->hasRole('client'))
-            $commerce =  Commerce::select('commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'commerces.short_description as short_description_commerce', 'commerces.slogan as slogan_commerce', 'commerces.original_profile_image as original_profile_image_commerce', 'commerces.thumbnail_profile_image as thumbnail_profile_image_commerce', 'commerces.avatar_profile_image as avatar_profile_image_commerce', 'commerces.address as address_commerce',);
+            $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address',);
 
 
 
