@@ -75,18 +75,18 @@ class PurchaseController extends Controller
         $purchases1 = $purchases->where('purchases.status', 'active');
 
 
-        $purchases2 = $purchases->where('purchases.status', 'completed');
+        $purchases2 = $purchases->where('purchases.status', 'completed')->union($purchases1);
 
 
-        $purchases3 = $purchases->where('purchases.status', 'cancelled');
+        $purchases3 = $purchases->where('purchases.status', 'cancelled')->union($purchases2)->get();
 
 
-        $purchases = array_merge($purchases1->get()->toArray(), $purchases2->get()->toArray(), $purchases3->get()->toArray());
+
 
         return response()->json(
             [
                 'status'        =>  'success',
-                'purchases'     =>  $purchases
+                'purchases'     =>  $purchases3
             ], 200);
     }
 
