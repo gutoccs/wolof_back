@@ -81,7 +81,7 @@ class PurchaseController extends Controller
         $purchases3 = $purchases->where('purchases.status', 'cancelled')
                                 ->get();
 
-        $purchases = array_merge($purchases1, $purchases2, $purchases3);
+        $purchases = array_merge($purchases1->toArray(), $purchases2->toArray(), $purchases3->toArray());
 
         return response()->json(
             [
