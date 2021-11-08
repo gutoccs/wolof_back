@@ -70,8 +70,18 @@ class PurchaseController extends Controller
         }
 
         $purchases = $purchases->select('purchases.id as id', 'products.id as id_product', 'products.title as title_product', 'products.thumbnail_image as thumbnail_image_product','clients.id as id_client', 'clients.name as name_client', 'clients.surname as surname_client', 'commerces.id as id_commerce', 'commerces.trade_name as trade_name_commerce', 'purchases.amount as amount', 'purchases.status as status', 'purchases.total_to_pay as total_to_pay', 'purchases.client_completed as client_completed', 'purchases.commerce_completed as commerce_completed', 'purchases.who_canceled as who_canceled', 'purchases.reason_for_cancellation as reason_for_cancellation', 'merchants.id as id_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.full_name as full_name_employee', 'purchases.cancelled_at as cancelled_at', 'purchases.created_at as created_at', 'purchases.updated_at as updated_at',)
-                                ->orderBy('purchases.created_at', 'desc')
+                                ->orderBy('purchases.id', 'asc');
+
+        $purchases1 = $purchases->where('purshases.status', 'active')
                                 ->get();
+
+        $purchases2 = $purchases->where('purshases.status', 'completed')
+                                ->get();
+
+        $purchases3 = $purchases->where('purshases.status', 'cancelled')
+                                ->get();
+
+        $purchases = array_merge($purchases1, $purchases2, $purchases3);
 
         return response()->json(
             [
