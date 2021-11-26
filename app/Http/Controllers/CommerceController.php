@@ -104,7 +104,7 @@ class CommerceController extends Controller
             'trade_name'                    =>  'required|max:128|unique:commerces',
             'legal_name'                    =>  'max:128|unique:commerces',
             'tax_identification_number'     =>  'max:64|unique:commerces',
-            'short_description '            =>  'max:255',
+            'short_description'             =>  'max:255',
             'slogan'                        =>  'max:255',
             'address'                       =>  'max:255'
         ],
