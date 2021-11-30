@@ -471,6 +471,8 @@ class CommerceController extends Controller
                             ->select('commerce_id as id_commerce', 'web as web_contact', 'whatsapp as whatsapp_contact', 'instagram as instagram_contact', 'facebook as facebook_contact', 'twitter as twitter_contact', 'linkedin as linkedin_contact', 'youtube as youtube_contact', 'tiktok as tiktok_contact', 'phone_1 as phone_1_contact', 'phone_2 as phone_2_contact', 'email as email_contact',)
                             ->first();
 
+        $contact['id_public_commerce'] = $commerce->id_public;
+
         return response()->json([
             'status' => 'success',
             'contact'  => $contact
