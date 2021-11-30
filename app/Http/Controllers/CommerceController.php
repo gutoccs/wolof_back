@@ -14,9 +14,6 @@ use jeremykenedy\LaravelRoles\Models\Role;
 use Illuminate\Support\Str;
 use \Gumlet\ImageResize;
 
-// TODO: En el listado de negocio, los comerciantes debe enviarle la misma data que a los clientes
-// TODO: En el show de negocio, a los comerciantes debe enviarle más data si y solo si es su negocio, sino debe ser igual que a los clientes
-
 class CommerceController extends Controller
 {
     /**
