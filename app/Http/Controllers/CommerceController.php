@@ -14,6 +14,9 @@ use jeremykenedy\LaravelRoles\Models\Role;
 use Illuminate\Support\Str;
 use \Gumlet\ImageResize;
 
+// TODO: En el listado de negocio, los comerciantes debe enviarle la misma data que a los clientes
+// TODO: En el show de negocio, a los comerciantes debe enviarle más data si y solo si es su negocio, sino debe ser igual que a los clientes
+
 class CommerceController extends Controller
 {
     /**
@@ -30,12 +33,8 @@ class CommerceController extends Controller
             $commerces =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
 
 
-        if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
-            $commerces =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address',);
-
-        if(Auth::user()->hasRole('client'))
-            $commerces =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address_commerce',);
-
+        if(Auth::user()->hasRole(['client', 'commerce.owner', 'commerce.employee']))
+            $commerces =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address_commerce');
 
         if($request->exists('id'))
             $commerces =  $commerces->where('commerces.id', $request->id);
@@ -176,8 +175,13 @@ class CommerceController extends Controller
             $commerce =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
 
 
-        if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
-            $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address',);
+        if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee'])) {
+            if (Auth::user()->merchant->commerce->id_public == $idPublicCommerce)
+                $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
+            else
+                $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address',);
+            }
+
 
         if(Auth::user()->hasRole('client'))
             $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address',);
