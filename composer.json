@@ -31,7 +31,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/helpers/GenerateIdPublicHelper.php"
+            "app/helpers/GenerateIdPublicHelper.php",
+            "app/helpers/AuthenticationInWompiHelper.php"
         ]
     },
     "autoload-dev": {
