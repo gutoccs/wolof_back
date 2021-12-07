@@ -58,4 +58,10 @@ class Purchase extends Model
         return $this->belongsTo('App\Models\Employee');
     }
 
+    // Compras realizadas
+    public function payments()
+    {
+        return $this->hasMany('App\Models\Payment');
+    }
+
 }

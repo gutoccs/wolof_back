@@ -114,7 +114,7 @@ class PurchaseController extends Controller
         $validator = Validator::make($request->all(),
         [
             'product_id'    =>  'required|exists:products,id',
-            'amount'        =>  'required|numeric|min:1|max:3',
+            'amount'        =>  'required|numeric|min:1',
         ],
         [
             'product_id.required'   =>  'El ID del Producto es Requerido',
@@ -122,7 +122,9 @@ class PurchaseController extends Controller
             'amount.required'       =>  'La Cantidad es Requerida',
             'amount.numeric'        =>  'La Cantidad debe ser numérico',
             'amount.min'            =>  'La Cantidad mínima es 1',
-            'amount.max'            =>  'La Cantidad máxima es 3',
+            /* Desactualizado porque ya el cliente cancela con TDC
+                'amount.max'            =>  'La Cantidad máxima es 3',
+            */
         ]);
 
         if($validator->fails())
@@ -136,8 +138,10 @@ class PurchaseController extends Controller
         if($product->quantity_available < $request->amount)
             return response()->json(['error'   =>  'No hay disponibilidad de productos para esta Compra'], 422);
 
-        if(Purchase::where('client_id', Auth::user()->client->id)->where('status', 'active')->count() == 2)
-            return response()->json(['error'   =>  'Antes de volver a comprar debe completar sus dos compras activas'], 422);
+        /* Desactualizado porque ya el cliente cancela con TDC
+            if(Purchase::where('client_id', Auth::user()->client->id)->where('status', 'active')->count() == 2)
+                return response()->json(['error'   =>  'Antes de volver a comprar debe completar sus dos compras activas'], 422);
+        */
 
         $purchase = new Purchase();
 

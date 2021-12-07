@@ -10,6 +10,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MerchantController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ResetPasswordController;
@@ -191,6 +192,26 @@ Route::group([
     Route::group(['middleware' => ['checkTypeOfUser:employee']], function () {
         Route::put('/{idPurchase}/clean', [PurchaseController::class, 'cleanPurchase'])->where('idPurchase', '\d+');
     });
+
+});
+
+
+Route::group([
+    'prefix'    =>  'payment',
+    'middleware'    => [
+        'auth:api'
+    ]
+], function() {
+
+    Route::get('/', [PaymentController::class, 'index']);
+    Route::get('/{idPayment}', [PaymentController::class, 'show'])->where('idPayment', '\d+');
+    Route::get('/approved-purchase-payment', [PaymentController::class, 'approvedPurchasePayment']);
+
+    Route::group(['middleware' => ['checkTypeOfUser:client']], function () {
+        Route::post('/', [PaymentController::class, 'store']);
+    });
+
+
 
 });
 
