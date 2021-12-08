@@ -146,14 +146,14 @@ class PaymentController extends Controller
         if ($err) {
             $this->errorResponse($payment, $err);
             $responseDecode = json_decode($err);
-            return response()->json(['errors' => $responseDecode->{'mensajes'}], 422);
+            return response()->json(['error' => $responseDecode->{'mensajes'}], 422);
         }
 
         $responseDecode = json_decode($response);
 
         if(isset($responseDecode->{'servicioError'})) {
             $this->errorResponse($payment, $response);
-            return response()->json(['errors' => $responseDecode->{'mensajes'}], 422);
+            return response()->json(['error' => $responseDecode->{'mensajes'}], 422);
         }
 
         $payment->flag_error = false;
