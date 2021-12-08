@@ -160,7 +160,7 @@ class PurchaseController extends Controller
 
             $product->save();
 
-            return response()->json(['status'    =>  'success'], 200);
+            return response()->json(['status'    =>  'success', 'purchase_id' => $purchase->id], 200);
         }
 
         return response()->json(['error' => 'No se pudo guardar la Compra'], 422);
