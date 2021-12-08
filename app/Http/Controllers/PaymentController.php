@@ -64,7 +64,7 @@ class PaymentController extends Controller
             'purchase_id'           =>  'required|numeric|exists:purchases,id',
             'numero_tarjeta'        =>  'required|string|between:12,20',
             'cvv'                   =>  'required|string|between:3,4',
-            'mes_vencimiento'       =>  'required|numeric|between:1:12',
+            'mes_vencimiento'       =>  'required|numeric|between:1,12',
             'anio_vencimiento'      =>  'required|numeric|between:2022,2032',
             'nombre_titular'        =>  'required|string|between:4,64'
         ],
@@ -83,7 +83,7 @@ class PaymentController extends Controller
             'mes_vencimiento.between'   =>  'El Mes de Vencimiento de la Tarjeta debe ser entre 1 y 12',
             'anio_vencimiento.required' =>  'El Año de Vencimiento de la Tarjeta es requerido',
             'anio_vencimiento.numeric'  =>  'El Año de Vencimiento de la Tarjeta debe ser un número',
-            'anio_vencimiento.between'  =>  'El Año de Vencimiento de la Tarjeta debe ser entre 2018 y 2030',
+            'anio_vencimiento.between'  =>  'El Año de Vencimiento de la Tarjeta debe ser entre 2022 y 2030',
             'nombre_titular.required'   =>  'El Nombre del Titular es requerido',
             'nombre_titular.string'     =>  'El Nombre del Titular debe ser un String (texto)',
             'nombre_titular.between'    =>  'El Nombre del Titular debe tener entre 4 y 64 caracteres',
