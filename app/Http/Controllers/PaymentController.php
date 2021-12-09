@@ -104,6 +104,9 @@ class PaymentController extends Controller
 
         $product = Product::find($purchase->product_id);
 
+        if($product->quantity_available < $purchase->amount)
+            return response()->json(['error'   =>  'No hay disponibilidad de productos para esta Compra'], 422);
+
         $wompi = Wompi::find(1);
 
         $data = array(
