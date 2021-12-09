@@ -371,7 +371,7 @@ class PurchaseController extends Controller
 
         return response()->json(['error' => 'No se pudo actualizar la Compra'], 422);
 
-        //Puede usarlo el cliente o comerciante, y solo afectaría su flag relacionado
+        // TODO: Puede usarlo el cliente o comerciante, y solo afectaría su flag relacionado
         // Verificar si los dos flags son true, si es así cambiar el status del mismo
     }
 
