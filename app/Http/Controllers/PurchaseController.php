@@ -152,16 +152,8 @@ class PurchaseController extends Controller
         $purchase->total_to_pay = $product->price * $request->amount;
 
         if($purchase->save())
-        {
-            $product->quantity_available = $product->quantity_available - $purchase->amount;
-            $product->sales = $product->sales + $purchase->amount;
-            if($product->quantity_available == 0)
-                $product->status = 'suspended';
-
-            $product->save();
-
             return response()->json(['status'    =>  'success', 'purchase_id' => $purchase->id], 200);
-        }
+
 
         return response()->json(['error' => 'No se pudo guardar la Compra'], 422);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payment;
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Wompi;
 use Illuminate\Http\Request;
@@ -101,6 +102,8 @@ class PaymentController extends Controller
         if($purchase->flag_paid_out)
             return response()->json(['error'   =>  'La compra ya está paga'], 422);
 
+        $product = Product::find($purchase->product_id);
+
         $wompi = Wompi::find(1);
 
         $data = array(
@@ -172,6 +175,13 @@ class PaymentController extends Controller
         }
 
         $payment->save();
+
+        $product->quantity_available = $product->quantity_available - $purchase->amount;
+        $product->sales = $product->sales + $purchase->amount;
+        if($product->quantity_available == 0)
+            $product->status = 'suspended';
+
+        $product->save();
 
         return response()->json(['status' => 'success'], 200);
     }
