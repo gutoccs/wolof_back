@@ -25,7 +25,8 @@ class PurchaseController extends Controller
                                 ->leftJoin('clients', 'clients.id', '=', 'purchases.client_id')
                                 ->leftJoin('employees', 'employees.id', '=', 'purchases.employee_id')
                                 ->leftJoin('merchants', 'merchants.id', '=', 'purchases.merchant_id')
-                                ->leftJoin('commerces', 'commerces.id', '=', 'purchases.commerce_id');
+                                ->leftJoin('commerces', 'commerces.id', '=', 'purchases.commerce_id')
+                                ->where('purchases.flag_paid_out', true);
 
 
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
@@ -174,6 +175,7 @@ class PurchaseController extends Controller
                                 ->leftJoin('employees', 'employees.id', '=', 'purchases.employee_id')
                                 ->leftJoin('merchants', 'merchants.id', '=', 'purchases.merchant_id')
                                 ->leftJoin('commerces', 'commerces.id', '=', 'purchases.commerce_id')
+                                ->where('purchases.flag_paid_out', true)
                                 ->where('purchases.id', $idPurchase);
 
 
