@@ -172,7 +172,7 @@ class PaymentController extends Controller
         $payment->forma_pago = $responseDecode->{'formaPago'};
         $payment->monto = $responseDecode->{'monto'};
 
-        if($payment->es_aprobada && $payment->es_real){
+        if($payment->es_aprobada){
             $purchase->flag_paid_out = true;
             $purchase->save();
         }
