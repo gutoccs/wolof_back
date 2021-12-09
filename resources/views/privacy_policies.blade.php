@@ -42,6 +42,9 @@ Políticas de Privacidad - Gabu App
             <p>Nuestro sitio web emplea la información con el fin de proporcionar el mejor servicio posible, particularmente para mantener un registro de usuarios, de pedidos en caso que aplique, y mejorar nuestros productos y servicios. Es posible que sean enviados correos electrónicos periódicamente a través de nuestro sitio con ofertas especiales, nuevos productos y otra información publicitaria que consideremos relevante para usted o que pueda brindarle algún beneficio, estos correos electrónicos serán enviados a la dirección que usted proporcione y podrán ser cancelados en cualquier momento.</p>
             <p><strong>Gabu App</strong> está altamente comprometido para cumplir con el compromiso de mantener su información segura. Usamos los sistemas más avanzados y los actualizamos constantemente para asegurarnos que no exista ningún acceso no autorizado.</p>
 
+            <p><strong>Datos de su Tarjeta de Crédito</strong></p>
+            <p><strong>Gabu App</strong> no almacena en sus servidores o en su dispositivo móvil celular los datos de su <strong>tarjeta de crédito</strong>.</p>
+            <p>Por ende, en cada compra realizada debe introducir, nuevamente, los datos de su tarjeta de crédito.</p>
 
             <p><strong>Cookies</strong></p>
             <p>Una cookie se refiere a un fichero que es enviado con la finalidad de solicitar permiso para almacenarse en su ordenador, al aceptar dicho fichero se crea y la cookie sirve entonces para tener información respecto al tráfico web, y también facilita las futuras visitas a una web recurrente. Otra función que tienen las cookies es que con ellas las web pueden reconocerte individualmente y por tanto brindarte el mejor servicio personalizado de su web.</p>
