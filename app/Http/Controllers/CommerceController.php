@@ -27,11 +27,11 @@ class CommerceController extends Controller
         $commerces;
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
-            $commerces =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
+            $commerces =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address', 'commerces.working_hours as working_hours');
 
 
         if(Auth::user()->hasRole(['client', 'commerce.owner', 'commerce.employee']))
-            $commerces =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address_commerce');
+            $commerces =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address_commerce', 'commerces.working_hours as working_hours');
 
         if($request->exists('id'))
             $commerces =  $commerces->where('commerces.id', $request->id);
@@ -102,7 +102,8 @@ class CommerceController extends Controller
             'tax_identification_number'     =>  'max:64|unique:commerces',
             'short_description'             =>  'max:255',
             'slogan'                        =>  'max:255',
-            'address'                       =>  'max:255'
+            'address'                       =>  'max:255',
+            'working_hours'                 =>  'max:64'
         ],
         [
             'trade_name.required'               =>  'El Nombre Comercial es requerido',
@@ -114,7 +115,8 @@ class CommerceController extends Controller
             'tax_identification_number.unique'  =>  'El NIT ya está siendo usado',
             'short_description.max'             =>  'La Descripción Corta del Comercio no puede exceder los 255 caracteres',
             'slogan.max'                        =>  'El Eslogan no puede exceder los 255 caracteres',
-            'address.max'                       =>  'La Dirección no puede exceder los 255 caracteres'
+            'address.max'                       =>  'La Dirección no puede exceder los 255 caracteres',
+            'working_hours.max'                 =>  'El Horario no puede exceder los 64 caracteres',
         ]);
 
         if($validator->fails())
@@ -140,6 +142,9 @@ class CommerceController extends Controller
 
         if($request->exists('address'))
             $commerce->address = $request->address;
+
+        if($request->exists('working_hours'))
+            $commerce->working_hours = $request->working_hours;
 
         if(!$commerce->save())
             return response()->json(['error'   =>  'No se pudo guardar el Comercio'], 422);
@@ -169,19 +174,19 @@ class CommerceController extends Controller
 
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
-            $commerce =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
+            $commerce =  Commerce::select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.flag_active as flag_active', 'commerces.observation_flag_active as observation_flag_active', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address', 'commerces.working_hours as working_hours');
 
 
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee'])) {
             if (Auth::user()->merchant->commerce->id_public == $idPublicCommerce)
-                $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address');
+                $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.tax_identification_number as tax_identification_number', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.created_at as created_at', 'commerces.updated_at as updated_at', 'commerces.address as address', 'commerces.working_hours as working_hours');
             else
-                $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address',);
+                $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address', 'commerces.working_hours as working_hours');
             }
 
 
         if(Auth::user()->hasRole('client'))
-            $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address',);
+            $commerce =  Commerce::select('commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.short_description as short_description', 'commerces.slogan as slogan', 'commerces.original_profile_image as original_profile_image', 'commerces.thumbnail_profile_image as thumbnail_profile_image', 'commerces.avatar_profile_image as avatar_profile_image', 'commerces.address as address', 'commerces.working_hours as working_hours');
 
 
 
@@ -224,7 +229,8 @@ class CommerceController extends Controller
             'tax_identification_number'     =>  'max:64',
             'short_description '            =>  'max:255',
             'slogan'                        =>  'max:255',
-            'address'                       =>  'max:255'
+            'address'                       =>  'max:255',
+            'working_hours'                 =>  'max:64',
         ],
         [
             'trade_name.max'                    =>  'El Nombre Comercial no puede exceder los 128 caracteres',
@@ -232,7 +238,8 @@ class CommerceController extends Controller
             'tax_identification_number.max'     =>  'El NIT no puede exceder los 64 caracteres',
             'short_description.max'             =>  'La Descripción Corta del Comercio no puede exceder los 255 caracteres',
             'slogan.max'                        =>  'El Eslogan no puede exceder los 255 caracteres',
-            'address.max'                       =>  'La Dirección no puede exceder los 255 caracteres'
+            'address.max'                       =>  'La Dirección no puede exceder los 255 caracteres',
+            'working_hours.max'                 =>  'El Horario no puede exceder los 64 caracteres',
         ]);
 
         if($validator->fails())
@@ -276,6 +283,9 @@ class CommerceController extends Controller
 
         if($request->exists('address'))
             $commerce->address = $request->address;
+
+        if($request->exists('working_hours'))
+            $commerce->working_hours = $request->working_hours;
 
         if($commerce->save())
             return response()->json(['status'   =>  'success'], 200);
@@ -613,7 +623,7 @@ class CommerceController extends Controller
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee'])) {
             $commerce = Commerce::leftJoin('contacts', 'contacts.commerce_id', '=', 'commerces.id')
                                     ->where('commerces.id', Auth::user()->merchant->commerce_id)
-                                    ->select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.thumbnail_profile_image as thumbnail_image', 'commerces.tax_identification_number as tax_number', 'commerces.slogan as slogan', 'commerces.short_description as short_description', DB::raw("DATE_FORMAT(commerces.created_at, '%d-%m-%Y') as registration_date"), 'commerces.address as address', 'contacts.id as id_contact', 'contacts.whatsapp as whatsapp', 'contacts.web as web', 'contacts.phone_1 as phone_1', 'contacts.instagram as instagram', 'contacts.facebook as facebook')
+                                    ->select('commerces.id as id', 'commerces.id_public as id_public', 'commerces.trade_name as trade_name', 'commerces.legal_name as legal_name', 'commerces.thumbnail_profile_image as thumbnail_image', 'commerces.tax_identification_number as tax_number', 'commerces.slogan as slogan', 'commerces.short_description as short_description', DB::raw("DATE_FORMAT(commerces.created_at, '%d-%m-%Y') as registration_date"), 'commerces.address as address', 'commerces.working_hours as working_hours', 'contacts.id as id_contact', 'contacts.whatsapp as whatsapp', 'contacts.web as web', 'contacts.phone_1 as phone_1', 'contacts.instagram as instagram', 'contacts.facebook as facebook')
                                     ->first();
 
             return response()->json([

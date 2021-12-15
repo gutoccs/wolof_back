@@ -28,7 +28,8 @@ class Commerce extends Model
         'avatar_profile_image',
         'flag_active',
         'observation_flag_active',
-        'address'
+        'address',
+        'working_hours'
     ];
 
     /**
