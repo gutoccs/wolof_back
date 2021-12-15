@@ -175,7 +175,7 @@ class PurchaseController extends Controller
                                 ->leftJoin('employees', 'employees.id', '=', 'purchases.employee_id')
                                 ->leftJoin('merchants', 'merchants.id', '=', 'purchases.merchant_id')
                                 ->leftJoin('commerces', 'commerces.id', '=', 'purchases.commerce_id')
-                                ->where('purchases.flag_paid_out', true)
+                                //->where('purchases.flag_paid_out', true) Aquí no va porque esto se usa para obtener la compra para pagar
                                 ->where('purchases.id', $idPurchase);
 
 
