@@ -135,7 +135,8 @@ class ProductController extends Controller
             'status'                =>  'in:"active","suspended"',
             'quantity_available'    =>  'required|numeric|min:0',
             'price'                 =>  'required|numeric',
-            'image'                 =>  'required|file|max:5120|dimensions:min_width=300,max_width=4000,min_height=300,max_height=4000|mimes:jpeg,bmp,png'
+            'real_price'            =>  'required|numeric',
+            'image'                 =>  'required|file|max:5120|dimensions:min_width=300,max_width=4000,min_height=300,max_height=4000|mimes:jpeg,bmp,png',
         ],
         [
             'commerce_id_public.exists'     =>  'El Comercio no existe',
@@ -148,6 +149,8 @@ class ProductController extends Controller
             'quantity_available.min'        =>  'La Cantidad Disponible debe ser mínimo 0',
             'price.required'                =>  'El Precio es requerido',
             'price.numeric'                 =>  'El Precio debe ser numérico',
+            'real_price.required'           =>  'El Precio con Descuento es requerido',
+            'real_price.numeric'            =>  'El Precio con Descuento debe ser numérico',
             'image.required'                =>  'La Imagen es requerida',
             'image.file'                    =>  'La Imagen debe ser un tipo de archivo',
             'image.max'                     =>  'La Imagen debe tener un peso máximo de 5MB',
@@ -195,6 +198,8 @@ class ProductController extends Controller
             $product->status = 'suspended';
 
         $product->price = $request->price;
+
+        $product->real_price = $request->real_price;
 
         if(!$product->save())
             return response()->json(['error' => 'No se pudo guardar el Producto'], 422);
@@ -294,6 +299,7 @@ class ProductController extends Controller
             'status'                =>  'in:"active","suspended"',
             'quantity_available'    =>  'required|numeric|min:0',
             'price'                 =>  'numeric',
+            'real_price'            =>  'numeric',
         ],
         [
             'title.max'                     =>  'El Nombre no debe ser mayor a 64 caracteres',
@@ -303,6 +309,7 @@ class ProductController extends Controller
             'quantity_available.numeric'    =>  'La Cantidad Disponible debe ser numérico',
             'quantity_available.min'        =>  'La Cantidad Disponible debe ser mínimo 0',
             'price.numeric'                 =>  'El Precio debe ser numérico',
+            'real_price.numeric'            =>  'El Precio con Descuento debe ser numérico',
         ]);
 
         if($validator->fails())
@@ -341,6 +348,9 @@ class ProductController extends Controller
 
         if($request->exists('price'))
             $product->price = $request->price;
+
+        if($request->exists('real_price'))
+            $product->real_price = $request->real_price;
 
         if($product->save())
             return response()->json(['status'    =>  'success'], 200);
