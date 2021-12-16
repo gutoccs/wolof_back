@@ -29,6 +29,7 @@ class Product extends Model
         'original_image',
         'thumbnail_image',
         'avatar_image',
+        'real_price',
     ];
 
     /* Comercio al que pertenece */
