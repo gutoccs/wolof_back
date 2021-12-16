@@ -150,7 +150,7 @@ class PurchaseController extends Controller
         $purchase->client_id = Auth::user()->client->id;
         $purchase->commerce_id = $product->commerce_id;
         $purchase->amount = $request->amount;
-        $purchase->total_to_pay = $product->price * $request->amount;
+        $purchase->total_to_pay = $product->real_price * $request->amount;
 
         if($purchase->save())
             return response()->json(['status'    =>  'success', 'purchase_id' => $purchase->id], 200);
