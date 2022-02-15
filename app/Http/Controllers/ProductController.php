@@ -86,6 +86,11 @@ class ProductController extends Controller
             }
         }
 
+        if($request->exists('type'))
+        {
+            $products = $products->where('products.type', $request->type); //food, product
+        }
+
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee', 'commerce.owner', 'commerce.employee']))
         {
             if($request->exists('status'))
@@ -97,7 +102,7 @@ class ProductController extends Controller
             if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
                 $products = $products->where('products.commerce_id', Auth::user()->merchant->commerce->id);
 
-            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
                                 ->get();
 
         }
@@ -106,7 +111,7 @@ class ProductController extends Controller
             $products = $products->where('products.status', 'active')
                                     ->where('products.quantity_available', '>', 0);
 
-            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
                                 ->get();
 
         }
@@ -137,6 +142,7 @@ class ProductController extends Controller
             'price'                 =>  'required|numeric',
             'real_price'            =>  'required|numeric',
             'image'                 =>  'required|file|max:5120|dimensions:min_width=300,max_width=4000,min_height=300,max_height=4000|mimes:jpeg,bmp,png',
+            'type'                  =>  'required|in:"food","product"'
         ],
         [
             'commerce_id_public.exists'     =>  'El Comercio no existe',
@@ -155,7 +161,9 @@ class ProductController extends Controller
             'image.file'                    =>  'La Imagen debe ser un tipo de archivo',
             'image.max'                     =>  'La Imagen debe tener un peso máximo de 5MB',
             'image.dimensions'              =>  'El tamaño de la Imagen debe estar entre 300px y 4000px',
-            'image.mimes'                   =>  'La Imagen debe ser jpg, bmp o png'
+            'image.mimes'                   =>  'La Imagen debe ser jpg, bmp o png',
+            'type.required'                 =>  'El Tipo es requerido',
+            'type.in'                       =>  'El Tipo debe ser food o product',
         ]);
 
         if($validator->fails())
@@ -200,6 +208,8 @@ class ProductController extends Controller
         $product->price = $request->price;
 
         $product->real_price = $request->real_price;
+
+        $product->type = $request->type;
 
         if(!$product->save())
             return response()->json(['error' => 'No se pudo guardar el Producto'], 422);
@@ -258,14 +268,14 @@ class ProductController extends Controller
             if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
                 $product = $product->where('products.commerce_id', Auth::user()->merchant->commerce->id);
 
-            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
                             ->first();
         }
         else
         {
             $product = $product->where('products.status', 'active')
                                 ->where('products.quantity_available', '>', 0);
-            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
                             ->first();
         }
 
@@ -300,6 +310,7 @@ class ProductController extends Controller
             'quantity_available'    =>  'required|numeric|min:0',
             'price'                 =>  'numeric',
             'real_price'            =>  'numeric',
+            'type'                  =>  'in:"food","product"'
         ],
         [
             'title.max'                     =>  'El Nombre no debe ser mayor a 64 caracteres',
@@ -310,6 +321,7 @@ class ProductController extends Controller
             'quantity_available.min'        =>  'La Cantidad Disponible debe ser mínimo 0',
             'price.numeric'                 =>  'El Precio debe ser numérico',
             'real_price.numeric'            =>  'El Precio con Descuento debe ser numérico',
+            'type.in'                       =>  'El Tipo debe ser food o product',
         ]);
 
         if($validator->fails())
@@ -351,6 +363,9 @@ class ProductController extends Controller
 
         if($request->exists('real_price'))
             $product->real_price = $request->real_price;
+
+        if($request->exists('type'))
+            $product->type = $request->type;
 
         if($product->save())
             return response()->json(['status'    =>  'success'], 200);
