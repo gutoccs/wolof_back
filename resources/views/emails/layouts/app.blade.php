@@ -174,7 +174,7 @@
                     <tr>
                         <td bgcolor="#f4f4f4" align="center" style="padding: 0px 30px 30px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 14px; font-weight: 400; line-height: 18px;">
                             <br>
-                            <p style="margin: 0;">Todos los Derechos Reservados © 2021 </p><br>
+                            <p style="margin: 0;">Todos los Derechos Reservados © 2022 </p><br>
                             <a href="https://gabu.app" target="_blank" style="color: #111111; font-weight: 700;">Gabu App</a>
                             <br>
                             <br>
