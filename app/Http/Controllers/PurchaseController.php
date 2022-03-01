@@ -28,6 +28,11 @@ class PurchaseController extends Controller
                                 ->leftJoin('commerces', 'commerces.id', '=', 'purchases.commerce_id')
                                 ->where('purchases.flag_paid_out', true);
 
+        if($request->exists('id'))
+        {
+            $purchases = $purchases->where('purchases.id', 'like', "%$request->id%");
+        }
+
 
         if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
         {
