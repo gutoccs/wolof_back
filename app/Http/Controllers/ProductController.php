@@ -30,7 +30,7 @@ class ProductController extends Controller
 
         if($request->exists('id'))
         {
-            $products = $products->where('products.id', $request->id);
+            $products = $products->where('products.id', 'like', "%$request->id%");
         }
 
         if($request->exists('commerce_id_public'))
