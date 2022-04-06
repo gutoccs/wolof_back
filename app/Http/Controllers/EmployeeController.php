@@ -217,6 +217,7 @@ class EmployeeController extends Controller
             'username'                  =>  'alpha_dash|between:4,64',
             'cellphone_number'          =>  'string|between:4,32',
             'full_name'                 =>  'string|between:4,128',
+            'role_id'                   =>  'numeric|exists:roles,id|in:1,2,3',
         ],
         [
             'email.email'               =>  'Debe indicar un Correo Electrónico válido',
@@ -227,6 +228,9 @@ class EmployeeController extends Controller
             'cellphone_number.between'  =>  'La longitud del Teléfono Celular debe ser entre 4 y 32 caracteres',
             'full_name.string'          =>  'El Nombre Completo es inválido',
             'full_name.between'         =>  'La longitud del Nombre Completo es entre 4 y 128 caracteres',
+            'role_id.numeric'           =>  'El ID del Rol debe ser numérico',
+            'role_id.exists'            =>  'El Rol No Existe en la BD',
+            'role_id.in'                =>  'El Rol No es válido para un empleado de Gabu'
         ]);
 
         if($validator->fails())
@@ -264,6 +268,13 @@ class EmployeeController extends Controller
 
         if($request->exists('full_name'))
             $employee->full_name = $request->full_name;
+
+        if($request->exists('role_id')) {
+            $employee->user->detachAllRoles();
+            $newRole = config('roles.models.role')::find($request->role_id);
+            $employee->user->attachRole($newRole);
+        }
+
 
 
         if($employee->save() && $employee->user->save())

@@ -253,6 +253,7 @@ class MerchantController extends Controller
             'name'                      =>  'string|between:4,64',
             'surname'                   =>  'string|between:4,64',
             'commerce_id'               =>  'numeric|exists:commerces,id',
+            'role_id'                   =>  'numeric|exists:roles,id|in:4,5',
         ],
         [
             'email.email'               =>  'Debe indicar un Correo Electrónico válido',
@@ -267,6 +268,9 @@ class MerchantController extends Controller
             'surname.between'           =>  'La longitud del Apellido es entre 4 y 64 caracteres',
             'commerce_id.numeric'       =>  'El ID del Comercio debe ser numérico',
             'commerce_id.exists'        =>  'El Comercio No Existe en la BD',
+            'role_id.numeric'           =>  'El ID del Rol debe ser numérico',
+            'role_id.exists'            =>  'El Rol No Existe en la BD',
+            'role_id.in'                =>  'El Rol No es válido para un Comerciante',
         ]);
 
         if($validator->fails())
@@ -307,6 +311,12 @@ class MerchantController extends Controller
 
         if($request->exists('surname'))
             $merchant->surname = $request->surname;
+
+        if($request->exists('role_id')) {
+            $merchant->user->detachAllRoles();
+            $newRole = config('roles.models.role')::find($request->role_id);
+            $merchant->user->attachRole($newRole);
+        }
 
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
