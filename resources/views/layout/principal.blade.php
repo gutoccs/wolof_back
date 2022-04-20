@@ -71,7 +71,7 @@
                                 -->
 							</ul>
 							<ul class="copyright">
-								<li>Gabu App | ©2021 Todos los derechos reservados</li>
+								<li>Gabu App | ©2022 Todos los derechos reservados</li>
 							</ul>
 						</div>
 					</section>
