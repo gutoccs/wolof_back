@@ -100,18 +100,16 @@ class ClientController extends Controller
 
         $validator = Validator::make($request->all(),
         [
-            'name'                  =>  'required|alpha|between:2,64',
-            'surname'               =>  'required|alpha|between:2,64',
+            'name'                  =>  'required|between:2,64',
+            'surname'               =>  'required|between:2,64',
             'email'                 =>  'required|email|max:255|unique:users',
             'cellphone_number'      =>  'required|string|between:4,32|unique:users',
             'password'              =>  'required|string|between:8,255'
         ],
         [
             'name.required'             =>  'El Nombre es requerido',
-            'name.alpha'                =>  'El Nombre debe contener solo Caracteres Alfabéticos',
             'name.between'              =>  'El Nombre debe debe contener entre 4 y 64 caracteres',
             'surname.required'          =>  'El Apellido es requerido',
-            'surname.alpha'             =>  'El Apellido debe contener solo Caracteres Alfabéticos',
             'surname.between'           =>  'El Apellido debe contener entre 4 y 64 caracteres',
             'email.required'            =>  'El Correo Electrónico es requerido',
             'email.email'               =>  'El Correo Electrónico tiene un formato inválido',
