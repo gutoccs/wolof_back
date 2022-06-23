@@ -6,8 +6,10 @@ use App\Models\Product;
 use App\Models\Commerce;
 use App\Models\Employee;
 use App\Models\Merchant;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -102,7 +104,7 @@ class ProductController extends Controller
             if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
                 $products = $products->where('products.commerce_id', Auth::user()->merchant->commerce->id);
 
-            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.visitor_counter as visitor_counter', 'products.created_at as created_at', 'products.updated_at as updated_at')
                                 ->get();
 
         }
@@ -111,7 +113,7 @@ class ProductController extends Controller
             $products = $products->where('products.status', 'active')
                                     ->where('products.quantity_available', '>', 0);
 
-            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $products = $products->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.visitor_counter as visitor_counter', 'products.created_at as created_at', 'products.updated_at as updated_at')
                                 ->get();
 
         }
@@ -175,7 +177,7 @@ class ProductController extends Controller
         if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
         {
             if(!$request->exists('commerce_id_public'))
-                return response()->json(['error'   =>  'El ID del Comercio es requerdio'], 422);
+                return response()->json(['error'   =>  'El ID del Comercio es requerido'], 422);
 
             $commerce = Commerce::where('id_public', $request->commerce_id_public)->first();
             $product->commerce_id = $commerce->id;
@@ -258,6 +260,9 @@ class ProductController extends Controller
         if(Product::where('id', $idProduct)->count() == 0)
             return response()->json(['error'   =>  'El Producto no existe'], 422);
 
+        if(Auth::user()->hasRole(['client']))
+            DB::table('products')->where('id', $idProduct)->increment('visitor_counter');
+
         $product = Product::leftJoin('merchants', 'merchants.id', '=', 'products.commerce_id')
                             ->leftJoin('commerces', 'commerces.id', '=', 'products.commerce_id')
                             ->leftJoin('employees', 'employees.id', '=', 'products.employee_id')
@@ -268,14 +273,14 @@ class ProductController extends Controller
             if(Auth::user()->hasRole(['commerce.owner', 'commerce.employee']))
                 $product = $product->where('products.commerce_id', Auth::user()->merchant->commerce->id);
 
-            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'merchants.id as id_merchant', 'merchants.id_public as id_public_merchant', 'merchants.name as name_merchant', 'merchants.surname as surname_merchant', 'employees.id as id_employee', 'employees.id_public as id_public_employee', 'employees.full_name as fullname_employee', 'products.title as title ', 'products.description as description', 'products.status as status', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.visitor_counter as visitor_counter', 'products.created_at as created_at', 'products.updated_at as updated_at')
                             ->first();
         }
         else
         {
             $product = $product->where('products.status', 'active')
                                 ->where('products.quantity_available', '>', 0);
-            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.created_at as created_at', 'products.updated_at as updated_at')
+            $product = $product->select('products.id as id', 'commerces.id as id_commerce', 'commerces.id_public as id_public_commerce', 'commerces.trade_name as trade_name_commerce', 'products.title as title ', 'products.description as description', 'products.quantity_available as quantity_available', 'products.price as price', 'products.real_price as real_price', 'products.type as type', 'products.sales as sales', 'products.original_image as original_image', 'products.thumbnail_image as thumbnail_image', 'products.avatar_image as avatar_image', 'products.visitor_counter as visitor_counter', 'products.created_at as created_at', 'products.updated_at as updated_at')
                             ->first();
         }
 
@@ -379,7 +384,40 @@ class ProductController extends Controller
      */
     public function destroy($idProduct)
     {
-        // TODO: Solo se puede borrar si nadie ha realizado una compra del mismo
+        /* Como es un borrado lógico, no elimino los archivos */
+
+        $product = Product::find($idProduct);
+
+        if(!$product)
+            return response()->json(['error'   =>  'El Producto no existe'], 422);
+
+        if(Auth::user()->hasRole(['ceo', 'cto', 'gabu.employee']))
+        {
+            $product->employee_id = Auth::user()->employee->id;
+            $product->merchant_id = null;
+        }
+        else
+        {
+            if($product->commerce_id != Auth::user()->merchant->commerce->id)
+                return response()->json(['error'   =>  'Usted no pertenece al Comercio'], 422);
+
+            $product->employee_id = null;
+
+            $product->merchant_id = Auth::user()->merchant->id;
+        }
+
+        if(Purchase::where('product_id', $product->id)->count() == 0)
+        {
+            $product->save();   // Arriba se modifica por el usuario que lo eliminó
+
+            if($product->delete())
+                return response()->json(['status' => 'success'], 200);
+            else
+                return response()->json(['error'   =>  'El Producto no pudo ser eliminado'], 422);
+        }
+        else
+            return response()->json(['error'   =>  'El Producto no puede ser eliminado porque tiene una venta'], 422);
+
     }
 
 

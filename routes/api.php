@@ -167,8 +167,8 @@ Route::group([
     Route::group(['middleware' => ['checkIsEmployeeOrMerchant']], function () {
         Route::post('/', [ProductController::class, 'store']);
         Route::put('/{idProduct}', [ProductController::class, 'update'])->where('idProduct', '\d+');
-        //Route::delete('{idProduct}', [ProductController::class, 'destroy'])->where('idProduct', '\d+');
         Route::post('/{idProduct}/update-image', [ProductController::class, 'updateImage'])->where('idProduct', '\d+');
+        Route::delete('/{idProduct}', [ProductController::class, 'destroy'])->where('idProduct', '\d+');
     });
 
 });

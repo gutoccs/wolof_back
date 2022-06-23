@@ -31,6 +31,7 @@ class Product extends Model
         'avatar_image',
         'real_price',
         'type',
+        'visitor_counter',
     ];
 
     /* Comercio al que pertenece */
