@@ -26,6 +26,10 @@ Route::get('/terms-and-conditions', function(){
     return view('terms_and_conditions');
 });
 
+Route::get('/developer', function(){
+    return view('developer');
+});
+
 Route::get('/{any}', function() {
     return view('problem');
 })->where('any', '.*');

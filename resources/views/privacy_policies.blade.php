@@ -11,6 +11,7 @@ Políticas de Privacidad - Gabu App
     <style>
         #body-content {
             padding: 1em;
+            margin-bottom: 70px;
         }
 
         #body-content .inner {

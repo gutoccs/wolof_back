@@ -12,6 +12,7 @@ Términos y Condiciones - Gabu App
 
         #body-content {
             padding: 1em;
+            margin-bottom: 70px;
         }
 
         #body-content .inner {
