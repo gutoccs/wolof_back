@@ -35,6 +35,11 @@ class ProductController extends Controller
             $products = $products->where('products.id', 'like', "%$request->id%");
         }
 
+        if($request->exists('title'))
+        {
+            $products = $products->where('products.title', 'like', "%$request->title%");
+        }
+
         if($request->exists('commerce_id_public'))
         {
             $commerce = Commerce::where('id_public', $request->commerce_id_public)->first();
